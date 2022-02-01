@@ -1,46 +1,111 @@
 ﻿using BepInEx;
 using R2API;
 using R2API.Utils;
-
-
-/// <summary>
-/// Things to do: 
-///     Make sure your references are located in a "libs" folder that's sitting next to the project folder.
-///         This folder structure was chosen as it was noticed to be one of the more common structures.
-///     Add a NuGet Reference to Mono.Cecil. The one included in bepinexpack3.0.0 on thunderstore is the wrong version 0.10.4. You want 0.11.1.
-///         You can do this by right clicking your project (not your solution) and going to "Manage NuGet Packages".
-///    Make sure the AUTHOR field is correct.
-///    Make sure the MODNAME field is correct.
-///    Delete this comment!
-///    Oh and actually write some stuff.
-/// </summary>
-
-
+using RoR2;
+using RoR2Mod.EliteEquipments;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using UnityEngine;
+using static On.RoR2.CharacterBody;
+using static R2API.SoundAPI;
+using static RoR2.DotController;
 
 namespace RoR2Mod
 {
+    // Meta data and dependencies
     [BepInDependency("com.bepis.r2api")]
-    //[R2APISubmoduleDependency(nameof(yourDesiredAPI))]
-
+    [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(ItemDropAPI), nameof(LanguageAPI), nameof(BuffAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ProjectileAPI), nameof(EffectAPI), nameof(SoundAPI))]
     [BepInPlugin(GUID, MODNAME, VERSION)]
+
     public sealed class RoR2ModPlugin : BaseUnityPlugin
     {
-        public const string
-            MODNAME = "ModName",
-            AUTHOR = "JTPuff",
-            GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.0.0";
+        // Mod info
+        public const string MODNAME = "Thalassophobia";
+        public const string AUTHOR = "JTPuff";
+        public const string GUID = "com." + AUTHOR + "." + MODNAME;
+        public const string VERSION = "0.0.1";
+
+        // String builder
+        public static StringBuilder BUILDER = new StringBuilder();
+
+        // Managers
+        private ItemManager itemManager;
+        private EliteManager eliteManager;
+
+        // DEBUG
+        public static bool DEBUG = true;
+        public static bool GODMODE = false;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Awake is automatically called by Unity")]
         private void Awake() //Called when loaded by BepInEx.
         {
+            // Logger
+            Log.Init(Logger);
 
+            // Loading assets
+            AssetManager.Init(this);
+
+            // Load items
+            itemManager = new ItemManager(Config);
+            itemManager.LoadAll();
+
+            // Load elites
+            eliteManager = new EliteManager(Config);
+            eliteManager.LoadAll();
+
+            // Log that everything finished loading
+            Log.LogInfo(nameof(Awake) + " done.");
+
+            // Godmode
+            if (DEBUG)
+            {
+                On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
+                {
+                    if (GODMODE)
+                    {
+                        var charComponent = self.GetComponent<CharacterBody>();
+                        if (charComponent != null && charComponent.isPlayerControlled)
+                        {
+                            return;
+                        }
+                        orig(self, damageInfo);
+                    }
+                    else
+                    {
+                        orig(self, damageInfo);
+                    }
+                };
+            }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Code Quality", "IDE0051:Remove unused private members", Justification = "Start is automatically called by Unity")]
-        private void Start() //Called at the first frame of the game.
+        private void Update()
         {
+            if (DEBUG)
+            {
+                // F2 Spawn thing
+                if (Input.GetKeyDown(KeyCode.F2))
+                {
+                    var transform = PlayerCharacterMasterController.instances[0].master.GetBodyObject().transform;
+                    PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(AffixPure.instance.EliteEquipmentDef.equipmentIndex), transform.position, transform.forward * 20f);
+                }
 
+                // F10 enables godmode
+                if (Input.GetKeyDown(KeyCode.F10))
+                {
+                    GODMODE = !GODMODE;
+                    if (GODMODE)
+                    {
+                        Log.LogInfo($"Godmode is enabled");
+                    }
+                    else if (!GODMODE)
+                    {
+                        Log.LogInfo($"Godmode is disabled");
+                    }
+                }
+            }
         }
     }
 }
