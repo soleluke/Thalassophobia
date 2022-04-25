@@ -1,12 +1,10 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using Thalassophobia.Utils;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
-using R2API.Utils;
 
-namespace RoR2Mod.Items.Tier3
+namespace Thalassophobia.Items.Tier3
 {
     public class DroneSummon : ItemBase<DroneSummon>
     {
@@ -34,6 +32,7 @@ namespace RoR2Mod.Items.Tier3
         private int numItems;
         private int maxDrones;
         private float damage;
+        private float megaDroneChance;
 
 
         public override void Init(ConfigFile config)
@@ -46,12 +45,13 @@ namespace RoR2Mod.Items.Tier3
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Damage };
+            ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.CannotCopy };
 
-            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 30f, "Time between spawning drones.").Value;
+            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 5f, "Time between spawning drones.").Value;
             numItems = config.Bind<int>("Item: " + ItemName, "NumberOfItems", 10, "Number of items the drones copy.").Value;
             maxDrones = config.Bind<int>("Item: " + ItemName, "MaxDrones", 3, "Max number of drones.").Value;
-            damage = config.Bind<float>("Item: " + ItemName, "Damage", 1.5f, "Percent damage the drones deal.").Value;
+            damage = config.Bind<float>("Item: " + ItemName, "Damage", 150f, "Percent damage the drones deal.").Value;
+            megaDroneChance = config.Bind<float>("Item: " + ItemName, "MegaDroneChance", 1.5f, "Percent chance to spawn a mega drone.").Value;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -61,6 +61,26 @@ namespace RoR2Mod.Items.Tier3
 
         public override void Hooks()
         {
+            On.RoR2.CharacterMaster.OnInventoryChanged += (orig, self) =>
+            {
+                orig(self);
+                if (GetCount(self.GetBody()) > 0)
+                {
+                    if (self.GetBodyObject().GetComponent<DroneSummonController>())
+                    {
+                        self.GetBodyObject().GetComponent<DroneSummonController>().summonItemCount = GetCount(self);
+                    }
+                    else
+                    {
+                        self.GetBodyObject().AddComponent<DroneSummonController>();
+                        self.GetBodyObject().GetComponent<DroneSummonController>().owner = self;
+                        self.GetBodyObject().GetComponent<DroneSummonController>().cooldown = cooldown;
+                        self.GetBodyObject().GetComponent<DroneSummonController>().damage = (int)damage / 10;
+                        self.GetBodyObject().GetComponent<DroneSummonController>().items = numItems;
+                        self.GetBodyObject().GetComponent<DroneSummonController>().summonItemCount = GetCount(self);
+                    }
+                }
+            };
         }
     }
 }

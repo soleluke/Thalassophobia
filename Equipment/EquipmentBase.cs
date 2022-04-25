@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Linq;
 using BepInEx.Configuration;
 
-namespace RoR2Mod.Equipment
+namespace Thalassophobia.Equipment
 {
     public abstract class EquipmentBase<T> : EquipmentBase where T : EquipmentBase<T>
     {

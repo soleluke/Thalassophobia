@@ -2,12 +2,9 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
-using R2API.Utils;
 using static On.RoR2.CharacterBody;
 
-namespace RoR2Mod.Items.Tier2
+namespace Thalassophobia.Items.Tier2
 {
     public class DebuffTimeDown : ItemBase<DebuffTimeDown>
     {

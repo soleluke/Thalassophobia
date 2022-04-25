@@ -2,11 +2,9 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
 using static RoR2.DotController;
 
-namespace RoR2Mod.Items.Tier1
+namespace Thalassophobia.Items.Tier1
 {
     public class AcidOnHit : ItemBase<AcidOnHit>
     {
@@ -57,12 +55,16 @@ namespace RoR2Mod.Items.Tier1
             scale = config.Bind<float>("Item: " + ItemName, "AttackSpeedScaling", 1.5f, "How much the interval between damage ticks decreases with attack speed.").Value;
             damage = config.Bind<float>("Item: " + ItemName, "DamageCoefficient", 0.06f, "Percent of your damage the item deals where 1.0 is 100%.").Value;
 
-            CustomBuff acidAffliction = new CustomBuff("Acidic Affliction", Resources.Load<Sprite>("textures/bufficons/texBuffDeathMarkIcon"), Color.green, true, true);
-            BuffAPI.Add(acidAffliction);
+            BuffDef acidAffliction = ScriptableObject.CreateInstance<BuffDef>();
+            acidAffliction.name = "Acidic Affliction";
+            acidAffliction.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffDeathMarkIcon");
+            acidAffliction.canStack = true;
+            acidAffliction.isDebuff = true;
+            ContentAddition.AddBuffDef(acidAffliction);
 
             DotDef acidDoT = new DotDef();
             acidDoT.damageColorIndex = DamageColorIndex.WeakPoint;
-            acidDoT.associatedBuff = acidAffliction.BuffDef;
+            acidDoT.associatedBuff = acidAffliction;
             acidDoT.damageCoefficient = damage;
             acidDoT.interval = interval;
             acidDoTIndex = DotAPI.RegisterDotDef(acidDoT, (self, dotStack) =>
@@ -83,6 +85,7 @@ namespace RoR2Mod.Items.Tier1
         {
             On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
             {
+                orig(self, damageInfo, victim);
                 if (damageInfo.attacker)
                 {
                     var acidCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
@@ -94,7 +97,6 @@ namespace RoR2Mod.Items.Tier1
                         }
                     }
                 }
-                orig(self, damageInfo, victim);
             };
         }
     }

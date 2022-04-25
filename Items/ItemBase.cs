@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RoR2Mod.Items
+namespace Thalassophobia.Items
 {
 
     // The directly below is entirely from TILER2 API (by ThinkInvis) specifically the Item module. Utilized to implement instancing for classes.
@@ -86,7 +86,6 @@ namespace RoR2Mod.Items
             ItemDef.pickupIconSprite = ItemIcon;
             ItemDef.hidden = false;
             ItemDef.canRemove = CanRemove;
-            ItemDef.tier = Tier;
 
             if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
 

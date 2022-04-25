@@ -2,11 +2,8 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
-using R2API.Utils;
 
-namespace RoR2Mod.Items.Lunar
+namespace Thalassophobia.Items.Lunar
 {
     public class LunarClock : ItemBase<LunarClock>
     {

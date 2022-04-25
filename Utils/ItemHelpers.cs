@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RoR2Mod.Utils
+namespace Thalassophobia.Utils
 {
     internal class ItemHelpers
     {
@@ -28,12 +28,6 @@ namespace RoR2Mod.Utils
 
             for (int i = 0; i < AllRenderers.Count; i++)
             {
-                if (debugmode)
-                {
-                    var controller = AllRenderers[i].gameObject.AddComponent<MaterialControllerComponents.HGControllerFinder>();
-                    controller.Renderer = AllRenderers[i];
-                }
-
                 renderInfos[i] = new CharacterModel.RendererInfo
                 {
                     defaultMaterial = AllRenderers[i] is SkinnedMeshRenderer ? AllRenderers[i].sharedMaterial : AllRenderers[i].material,

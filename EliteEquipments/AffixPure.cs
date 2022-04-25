@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RoR2Mod.EliteEquipments
+namespace Thalassophobia.EliteEquipments
 {
     class AffixPure : EliteEquipmentBase<AffixPure>
     {
@@ -22,7 +22,7 @@ namespace RoR2Mod.EliteEquipments
 
         public override string EliteModifier => "Nullifying";
 
-        public override GameObject EliteEquipmentModel => AssetManager.GetPrefab(AssetManager.ItemPrefabIndex.AffixPurePickup);
+        public override GameObject EliteEquipmentModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
         public override Sprite EliteEquipmentIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
@@ -44,22 +44,10 @@ namespace RoR2Mod.EliteEquipments
 
         private void CreateConfig(ConfigFile config)
         {
-            EliteMaterial = AssetManager.GetMaterial(AssetManager.MaterialIndex.AffixPureOverlay);
         }
 
         private void CreateEliteTiers()
         {
-            CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
-            {
-                new CombatDirector.EliteTierDef()
-                {
-                    costMultiplier = CombatDirector.baseEliteCostMultiplier,
-                    damageBoostCoefficient = CombatDirector.baseEliteDamageBoostCoefficient,
-                    healthBoostCoefficient = CombatDirector.baseEliteHealthBoostCoefficient,
-                    eliteTypes = Array.Empty<EliteDef>(),
-                    isAvailable = SetAvailability
-                }
-            };
         }
 
         private bool SetAvailability(SpawnCard.EliteRules arg)
@@ -74,22 +62,24 @@ namespace RoR2Mod.EliteEquipments
 
         public override void Hooks()
         {
+            // Removes debuffs from self
             On.RoR2.CharacterBody.UpdateBuffs += (orig, self, deltaTime) =>
             {
                 if (self.HasBuff(EliteBuffDef))
                 {
-                    Util.CleanseBody(self, true, false, true, true, false);
+                    Util.CleanseBody(self, true, false, false, true, true, false);
                 }
                 orig(self, deltaTime);
             };
 
+            // Removes buffs from hit enemies
             On.RoR2.GlobalEventManager.OnHitAll += (orig, self, DamageInfo, hitObject) =>
             {
                 if (DamageInfo.attacker && hitObject.GetComponent<CharacterBody>())
                 {
                     if (DamageInfo.attacker.GetComponent<CharacterBody>().HasBuff(EliteBuffDef))
                     {
-                        Util.CleanseBody(hitObject.GetComponent<CharacterBody>(), true, true, true, true, false);
+                        Util.CleanseBody(hitObject.GetComponent<CharacterBody>(), false, true, false, false, false, false);
                     }
                 }
             };

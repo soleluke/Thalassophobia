@@ -2,12 +2,10 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
 using R2API.Utils;
 using RoR2.Projectile;
 
-namespace RoR2Mod.Items.Tier2
+namespace Thalassophobia.Items.Tier2
 {
     public class Beans : ItemBase<Beans>
     {
@@ -56,10 +54,12 @@ namespace RoR2Mod.Items.Tier2
             damageCoefficient = config.Bind<float>("Item: " + ItemName, "DamageCoefficient", 0.1f, "Percent damage that the explosion deals where 1.0 is 100%.").Value;
             procCoefficient = config.Bind<float>("Item: " + ItemName, "ProcCoefficent", 0.4f, "Proc coefficient of the explosion.").Value;
 
+            /*
             GameObject projectile = AssetManager.GetProjectile(AssetManager.ProjectileIndex.Bean);
             projectile.GetComponent<ProjectileImpactExplosion>().blastProcCoefficient = procCoefficient;
-            projectile.GetComponent<ProjectileImpactExplosion>().explosionEffect = AssetManager.GetEffect(AssetManager.EffectPrefabIndex.Bean);
+            projectile.GetComponent<ProjectileImpactExplosion>().explosionEffect = AssetManager.GetEffect(AssetManager.EffectPrefabIndex.BeanPop);
             ProjectileAPI.Add(projectile);
+            */
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -71,6 +71,7 @@ namespace RoR2Mod.Items.Tier2
         {
             On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
             {
+                /*
                 if (damageInfo.attacker)
                 {
                     var beanCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
@@ -81,6 +82,8 @@ namespace RoR2Mod.Items.Tier2
                             GameObject projectilePrefab = AssetManager.GetProjectile(AssetManager.ProjectileIndex.Bean);
                             ProcChainMask procMask = damageInfo.procChainMask;
                             procMask.AddProc((ProcType)(ProcType.Count + 1));
+                            projectilePrefab.GetComponent<ProjectileImpactExplosion>().blastRadius = radius + (radiusIncrease * (beanCount - 1));
+                            projectilePrefab.GetComponent<ProjectileImpactExplosion>().explosionEffect = AssetManager.GetEffect(AssetManager.EffectPrefabIndex.BeanPop);
                             FireProjectileInfo info = new FireProjectileInfo();
                             info.procChainMask = procMask;
                             info.projectilePrefab = projectilePrefab;
@@ -89,7 +92,6 @@ namespace RoR2Mod.Items.Tier2
                             info.damageTypeOverride = DamageType.Generic;
                             info.damage = damageInfo.attacker.GetComponent<CharacterBody>().damage * damageCoefficient;
                             info.crit = false;
-                            projectilePrefab.GetComponent<ProjectileImpactExplosion>().blastRadius = radius + (radiusIncrease * (beanCount - 1));
                             int num = Mathf.RoundToInt(Random.Range(minBeans, maxBeans));
                             for (; num > 0; num--)
                             {
@@ -99,6 +101,7 @@ namespace RoR2Mod.Items.Tier2
                         }
                     }
                 }
+                */
                 orig(self, damageInfo, victim);
             };
         }

@@ -7,7 +7,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace RoR2Mod.EliteEquipments
+namespace Thalassophobia.EliteEquipments
 {
     class AffixWithering : EliteEquipmentBase<AffixWithering>
     {
@@ -23,7 +23,7 @@ namespace RoR2Mod.EliteEquipments
 
         public override string EliteModifier => "Zircon";
 
-        public override GameObject EliteEquipmentModel => AssetManager.GetPrefab(AssetManager.ItemPrefabIndex.AffixPurePickup);
+        public override GameObject EliteEquipmentModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
         public override Sprite EliteEquipmentIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
@@ -45,21 +45,13 @@ namespace RoR2Mod.EliteEquipments
 
         private void CreateConfig(ConfigFile config)
         {
-            EliteMaterial = AssetManager.GetMaterial(AssetManager.MaterialIndex.AffixWitheringOverlay);
         }
 
         private void CreateEliteTiers()
         {
             CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
             {
-                new CombatDirector.EliteTierDef()
-                {
-                    costMultiplier = CombatDirector.baseEliteCostMultiplier * 6,
-                    damageBoostCoefficient = CombatDirector.baseEliteDamageBoostCoefficient * 3,
-                    healthBoostCoefficient = CombatDirector.baseEliteHealthBoostCoefficient * 4.5f,
-                    eliteTypes = Array.Empty<EliteDef>(),
-                    isAvailable = SetAvailability
-                }
+                R2API.EliteAPI.VanillaFirstTierDef
             };
         }
 
@@ -89,6 +81,7 @@ namespace RoR2Mod.EliteEquipments
                     {
                         flag = self.HasBuff(EliteBuffDef);
                     }
+                    /*
                     if (self.GetComponent<Utils.DecayManager>() != flag)
                     {
                         if (flag)
@@ -98,6 +91,7 @@ namespace RoR2Mod.EliteEquipments
                         }
                         UnityEngine.Object.Destroy(self.GetComponent<Utils.DecayManager>().gameObject);
                     }
+                                     */
                 }
             };
         }

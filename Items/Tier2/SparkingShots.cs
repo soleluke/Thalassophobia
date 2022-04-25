@@ -2,11 +2,9 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
 using R2API.Utils;
 
-namespace RoR2Mod.Items.Tier2
+namespace Thalassophobia.Items.Tier2
 {
     public class SparkingShots : ItemBase<SparkingShots>
     {
@@ -30,7 +28,7 @@ namespace RoR2Mod.Items.Tier2
         public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
         // Custom buff for sparking
-        private CustomBuff sparkingDebuff;
+        private BuffDef sparkingDebuff;
 
         // Item stats
         private float damageThreshold;
@@ -60,9 +58,6 @@ namespace RoR2Mod.Items.Tier2
             procCoefficient = config.Bind<float>("Item: " + ItemName, "ProcCoefficent", 0.05f, "Proc coefficicent of the sparks.").Value;
             sparks = config.Bind<int>("Item: " + ItemName, "AmountOfSparks", 3, "Amount of sparks produced when striking on enemy.").Value;
             sparksPerStack = config.Bind<int>("Item: " + ItemName, "SparksPerStack", 1, "Amount of extra sparks per item stack.").Value;
-
-            sparkingDebuff = new CustomBuff("Sparking", Resources.Load<Sprite>("textures/bufficons/texbuffonfireicon"), Color.clear, true, false);
-            BuffAPI.Add(sparkingDebuff);
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

@@ -2,11 +2,9 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
 using R2API.Utils;
 
-namespace RoR2Mod.Items.Tier2
+namespace Thalassophobia.Items.Tier2
 {
     public class HealMoreOnKill : ItemBase<HealMoreOnKill>
     {
@@ -30,7 +28,7 @@ namespace RoR2Mod.Items.Tier2
         public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
         // Custom buff for healing
-        private CustomBuff redStoneBoost;
+        private BuffDef redStoneBoost;
 
         // Item Stats
         private float healUp;
@@ -55,8 +53,11 @@ namespace RoR2Mod.Items.Tier2
             maxBuffsStack = config.Bind<int>("Item: " + ItemName, "MaxBuffStacksPerItem", 1, "How many extra stacks you can have per stack of the item.").Value;
             duration = config.Bind<float>("Item: " + ItemName, "Duration", 3f, "How long the buff lasts.").Value;
 
-            redStoneBoost = new CustomBuff("Red Stone Boost", Resources.Load<Sprite>("textures/bufficons/texbuffregenboosticon"), Color.red, false, true);
-            BuffAPI.Add(redStoneBoost);
+            redStoneBoost = ScriptableObject.CreateInstance<BuffDef>();
+            redStoneBoost.name = "Red Stone Boost";
+            redStoneBoost.iconSprite = Resources.Load<Sprite>("textures/bufficons/texbuffregenboosticon");
+            redStoneBoost.isDebuff = false;
+            redStoneBoost.canStack = true;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -71,7 +72,7 @@ namespace RoR2Mod.Items.Tier2
                 var itemCountHealKill = GetCount(self.body);
                 if (itemCountHealKill > 0)
                 {
-                    int stacks = self.body.GetBuffCount(redStoneBoost.BuffDef);
+                    int stacks = self.body.GetBuffCount(redStoneBoost);
                     amount *= 1 + (healUp * stacks);
                 }
 
@@ -87,7 +88,7 @@ namespace RoR2Mod.Items.Tier2
                     if (itemCountHealKill > 0)
                     {
                         CharacterBody body = damageReport.attackerBody;
-                        body.AddTimedBuff(redStoneBoost.BuffDef, duration, (int)(baseMaxBuffs + (maxBuffsStack * (itemCountHealKill - 1))));
+                        body.AddTimedBuff(redStoneBoost, duration, (int)(baseMaxBuffs + (maxBuffsStack * (itemCountHealKill - 1))));
                     }
                 }
             };

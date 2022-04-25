@@ -8,7 +8,7 @@ using UnityEngine;
 using System.Linq;
 using BepInEx.Configuration;
 
-namespace RoR2Mod.EliteEquipments
+namespace Thalassophobia.EliteEquipments
 {
     public abstract class EliteEquipmentBase<T> : EliteEquipmentBase where T : EliteEquipmentBase<T>
     {
@@ -233,7 +233,7 @@ namespace RoR2Mod.EliteEquipments
             EliteAPI.Add(new CustomElite(EliteDef, CanAppearInEliteTiers));
 
             EliteBuffDef.eliteDef = EliteDef;
-            BuffAPI.Add(new CustomBuff(EliteBuffDef));
+            ContentAddition.AddBuffDef(EliteBuffDef);
         }
 
 

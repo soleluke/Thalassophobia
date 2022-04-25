@@ -1,6 +1,6 @@
 ﻿using BepInEx.Logging;
 
-namespace RoR2Mod
+namespace Thalassophobia
 {
     internal static class Log
     {

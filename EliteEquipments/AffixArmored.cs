@@ -3,10 +3,9 @@ using R2API;
 using RoR2;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
-namespace RoR2Mod.EliteEquipments
+namespace Thalassophobia.EliteEquipments
 {
     class AffixArmored : EliteEquipmentBase<AffixArmored>
     {
@@ -22,7 +21,7 @@ namespace RoR2Mod.EliteEquipments
 
         public override string EliteModifier => "Hypersthene";
 
-        public override GameObject EliteEquipmentModel => AssetManager.GetPrefab(AssetManager.ItemPrefabIndex.AffixPurePickup);
+        public override GameObject EliteEquipmentModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
         public override Sprite EliteEquipmentIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
@@ -44,21 +43,13 @@ namespace RoR2Mod.EliteEquipments
 
         private void CreateConfig(ConfigFile config)
         {
-            EliteMaterial = AssetManager.GetMaterial(AssetManager.MaterialIndex.AffixArmoredOverlay);
         }
 
         private void CreateEliteTiers()
         {
             CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
             {
-                new CombatDirector.EliteTierDef()
-                {
-                    costMultiplier = CombatDirector.baseEliteCostMultiplier * 6,
-                    damageBoostCoefficient = CombatDirector.baseEliteDamageBoostCoefficient * 3,
-                    healthBoostCoefficient = CombatDirector.baseEliteHealthBoostCoefficient * 4.5f,
-                    eliteTypes = Array.Empty<EliteDef>(),
-                    isAvailable = SetAvailability
-                }
+                R2API.EliteAPI.VanillaFirstTierDef
             };
         }
 

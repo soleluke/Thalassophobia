@@ -2,10 +2,8 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
 
-namespace RoR2Mod.Items.Tier1
+namespace Thalassophobia.Items.Tier1
 {
     public class HealOnKill : ItemBase<HealOnKill>
     {

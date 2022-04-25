@@ -6,15 +6,15 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-namespace RoR2Mod.EliteEquipments
+namespace Thalassophobia.EliteEquipments
 {
     class AffixUnstable : EliteEquipmentBase<AffixUnstable>
     {
-        public override string EliteEquipmentName => "Blessing Of The Void";
+        public override string EliteEquipmentName => "Blessing Of The Abyss";
 
         public override string EliteAffixToken => "AFFIX_UNSTABLE";
 
-        public override string EliteEquipmentPickupDesc => "Become an aspect of the mortality.";
+        public override string EliteEquipmentPickupDesc => "Become an aspect of the Void.";
 
         public override string EliteEquipmentFullDescription => "";
 
@@ -22,7 +22,7 @@ namespace RoR2Mod.EliteEquipments
 
         public override string EliteModifier => "Erythrite";
 
-        public override GameObject EliteEquipmentModel => AssetManager.GetPrefab(AssetManager.ItemPrefabIndex.AffixPurePickup);
+        public override GameObject EliteEquipmentModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
         public override Sprite EliteEquipmentIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
@@ -44,22 +44,10 @@ namespace RoR2Mod.EliteEquipments
 
         private void CreateConfig(ConfigFile config)
         {
-            EliteMaterial = AssetManager.GetMaterial(AssetManager.MaterialIndex.AffixUnstableOverlay);
         }
 
         private void CreateEliteTiers()
         {
-            CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
-            {
-                new CombatDirector.EliteTierDef()
-                {
-                    costMultiplier = CombatDirector.baseEliteCostMultiplier * 6,
-                    damageBoostCoefficient = CombatDirector.baseEliteDamageBoostCoefficient * 3,
-                    healthBoostCoefficient = CombatDirector.baseEliteHealthBoostCoefficient * 4.5f,
-                    eliteTypes = Array.Empty<EliteDef>(),
-                    isAvailable = SetAvailability
-                }
-            };
         }
 
         private bool SetAvailability(SpawnCard.EliteRules arg)

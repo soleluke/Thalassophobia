@@ -2,11 +2,9 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
 using R2API.Utils;
 
-namespace RoR2Mod.Items.Tier2
+namespace Thalassophobia.Items.Tier2
 {
     public class DotDamageUp : ItemBase<DotDamageUp>
     {
@@ -54,14 +52,14 @@ namespace RoR2Mod.Items.Tier2
 
         public override void Hooks()
         {
-            On.RoR2.DotController.AddDot += (orig, self, attackerObject, duration, dotIndex, damageMultiplier) =>
+            On.RoR2.DotController.AddDot += (orig, self, attackerObject, duration, dotIndex, damageMultiplier, maxStacks, totalDamage) =>
             {
                 var itemCount = GetCount(attackerObject.GetComponent<CharacterBody>());
                 if (itemCount > 0)
                 {
                     damageMultiplier *= 1 + (damageUp * itemCount);
                 }
-                orig(self, attackerObject, duration, dotIndex, damageMultiplier);
+                orig(self, attackerObject, duration, dotIndex, damageMultiplier, maxStacks, totalDamage);
             };
         }
     }

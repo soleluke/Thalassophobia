@@ -2,11 +2,8 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static RoR2Mod.RoR2ModPlugin;
-using static RoR2Mod.ItemManager;
-using R2API.Utils;
 
-namespace RoR2Mod.Items.Tier3
+namespace Thalassophobia.Items.Tier3
 {
     public class DamageExplosion : ItemBase<DamageExplosion>
     {
@@ -30,8 +27,8 @@ namespace RoR2Mod.Items.Tier3
         public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
         // Custom buffs for tracking downtime and damage
-        private CustomBuff downtimeDebuff;
-        private CustomBuff omenDebuff;
+        private BuffDef downtimeDebuff;
+        private BuffDef omenDebuff;
 
 
         // Item stats
@@ -61,11 +58,19 @@ namespace RoR2Mod.Items.Tier3
             damageStack = config.Bind<float>("Item: " + ItemName, "DamageStack", 0.5f, "Extra damage per item stack.").Value;
             killedBonus = config.Bind<float>("Item: " + ItemName, "KilledBonus", 0.5f, "Bonus damage percent if the enemy is killed early.").Value;
 
-            downtimeDebuff = new CustomBuff("Charging Omen", Resources.Load<Sprite>("textures/bufficons/texbuffbanditskullicon"), Color.green, false, true);
-            BuffAPI.Add(downtimeDebuff);
+            downtimeDebuff = ScriptableObject.CreateInstance<BuffDef>();
+            downtimeDebuff.name = "Charging Omen";
+            downtimeDebuff.iconSprite = Resources.Load<Sprite>("textures/bufficons/texbuffbanditskullicon");
+            downtimeDebuff.isCooldown = true;
+            ContentAddition.AddBuffDef(downtimeDebuff);
 
-            omenDebuff = new CustomBuff("Suffering", Resources.Load<Sprite>("textures/bufficons/texbuffbanditskullicon"), Color.blue, false, true);
-            BuffAPI.Add(omenDebuff);
+            omenDebuff = ScriptableObject.CreateInstance<BuffDef>();
+            omenDebuff.name = "Suffering";
+            omenDebuff.iconSprite = Resources.Load<Sprite>("textures/bufficons/texbuffbanditskullicon");
+            omenDebuff.isCooldown = false;
+            omenDebuff.isDebuff = true;
+            omenDebuff.canStack = false;
+            ContentAddition.AddBuffDef(omenDebuff);
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

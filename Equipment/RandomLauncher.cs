@@ -3,7 +3,7 @@ using R2API;
 using RoR2;
 using UnityEngine;
 
-namespace RoR2Mod.Equipment
+namespace Thalassophobia.Equipment
 {
     public class RandomLauncher : EquipmentBase
     {
