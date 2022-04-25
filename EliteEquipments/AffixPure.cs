@@ -30,7 +30,7 @@ namespace Thalassophobia.EliteEquipments
 
         public override Color32 EliteColor => new Color32(50, 50, 50, 255);
 
-        public override int EliteRampIndex => -1;
+        public override int EliteRampIndex => 2;
 
         public override void Init(ConfigFile config)
         {
@@ -48,6 +48,10 @@ namespace Thalassophobia.EliteEquipments
 
         private void CreateEliteTiers()
         {
+            CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
+               {
+                R2API.EliteAPI.VanillaFirstTierDef
+               };
         }
 
         private bool SetAvailability(SpawnCard.EliteRules arg)

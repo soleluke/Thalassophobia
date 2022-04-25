@@ -8,7 +8,7 @@ namespace Thalassophobia
 {
     public class ItemHelper
     {
-        private List<ItemBase> Items = new List<ItemBase>();
+        public static List<ItemBase> Items = new List<ItemBase>();
         public List<EquipmentBase> Equipments = new List<EquipmentBase>();
         private BepInEx.Configuration.ConfigFile config;
 

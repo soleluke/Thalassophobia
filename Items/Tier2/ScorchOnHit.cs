@@ -4,6 +4,7 @@ using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
 using UnityEngine.Networking;
+using static R2API.DamageAPI;
 using static RoR2.DotController;
 
 namespace Thalassophobia.Items.Tier2
@@ -41,6 +42,9 @@ namespace Thalassophobia.Items.Tier2
         // BuffDef
         BuffDef scorched;
 
+        // Damage Type
+        ModdedDamageType scorchedDamage;
+
         public override void Init(ConfigFile config)
         {
             CreateConfig(config);
@@ -54,10 +58,10 @@ namespace Thalassophobia.Items.Tier2
             ItemTags = new ItemTag[] { ItemTag.Damage };
 
             chance = config.Bind<float>("Item: " + ItemName, "Chance", 10.0f, "").Value;
-            duration = config.Bind<float>("Item: " + ItemName, "Duration", 3.0f, "").Value;
+            duration = config.Bind<float>("Item: " + ItemName, "Duration", 2.5f, "").Value;
             durationScale = config.Bind<float>("Item: " + ItemName, "Duration Scale", 1.0f, "").Value;
-            radius = config.Bind<float>("Item: " + ItemName, "Radius", 6.0f, "").Value;
-            radiusScale = config.Bind<float>("Item: " + ItemName, "Radius Scale", 2.0f, "").Value;
+            radius = config.Bind<float>("Item: " + ItemName, "Radius", 8.0f, "").Value;
+            radiusScale = config.Bind<float>("Item: " + ItemName, "Radius Scale", 1.5f, "").Value;
             damage = config.Bind<float>("Item: " + ItemName, "Damage", 0.30f, "").Value;
             bonusDamage = config.Bind<float>("Item: " + ItemName, "Damage Bonus", 1.30f, "").Value;
 
@@ -68,6 +72,8 @@ namespace Thalassophobia.Items.Tier2
             scorched.isDebuff = true;
             scorched.canStack = false;
             ContentAddition.AddBuffDef(scorched);
+
+            scorchedDamage = ReserveDamageType();
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -83,7 +89,7 @@ namespace Thalassophobia.Items.Tier2
                 if (damageInfo.attacker)
                 {
                     var scorchCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
-                    if (scorchCount > 0)
+                    if (scorchCount > 0 && damageInfo.procCoefficient > 0)
                     {
                         if (Util.CheckRoll(chance, damageInfo.attacker.GetComponent<CharacterMaster>()) && !damageInfo.rejected)
                         {
@@ -91,25 +97,27 @@ namespace Thalassophobia.Items.Tier2
                             {
                                 Log.LogInfo("Proc Candle");
                             }
-                            victim.GetComponent<CharacterBody>().AddTimedBuff(scorched, duration + (durationScale * scorchCount));
 
                             Vector3 position = victim.transform.position;
-                            float baseDamage = damage * damageInfo.procCoefficient;
+                            float baseDamage = (damage * damageInfo.procCoefficient) + 5;
                             GameObject explode = UnityEngine.Object.Instantiate<GameObject>(GlobalEventManager.CommonAssets.explodeOnDeathPrefab, position, Quaternion.identity);
-                            DelayBlast component6 = explode.GetComponent<DelayBlast>();
-                            if (component6)
+                            DelayBlast blast = explode.GetComponent<DelayBlast>();
+                            if (blast)
                             {
-                                component6.position = position;
-                                component6.baseDamage = baseDamage;
-                                component6.baseForce = 2000f;
-                                component6.bonusForce = Vector3.up * 1000f;
-                                component6.radius = radius + radiusScale * scorchCount;
-                                component6.attacker = damageInfo.attacker;
-                                component6.inflictor = null;
-                                component6.crit = Util.CheckRoll(damageInfo.attacker.GetComponent<CharacterBody>().crit, damageInfo.attacker.GetComponent<CharacterBody>().master);
-                                component6.maxTimer = 0.2f;
-                                component6.damageColorIndex = DamageColorIndex.Item;
-                                component6.falloffModel = BlastAttack.FalloffModel.SweetSpot;
+                                blast.position = position;
+                                blast.baseDamage = baseDamage;
+                                blast.baseForce = 500f;
+                                blast.bonusForce = Vector3.up * 250f;
+                                blast.radius = radius + (radiusScale * (scorchCount-1));
+                                blast.attacker = damageInfo.attacker;
+                                blast.inflictor = null;
+                                blast.crit = Util.CheckRoll(damageInfo.attacker.GetComponent<CharacterBody>().crit, damageInfo.attacker.GetComponent<CharacterBody>().master);
+                                blast.maxTimer = 0.0f;
+                                blast.damageColorIndex = DamageColorIndex.Item;
+                                blast.falloffModel = BlastAttack.FalloffModel.SweetSpot;
+                                blast.procCoefficient = 0;
+                                var damageTypeComponent = blast.gameObject.AddComponent<ModdedDamageTypeHolderComponent>();
+                                damageTypeComponent.Add(scorchedDamage);
                             }
                             TeamFilter component7 = explode.GetComponent<TeamFilter>();
                             if (component7)
@@ -119,12 +127,16 @@ namespace Thalassophobia.Items.Tier2
                             NetworkServer.Spawn(explode);
                         }
                     }
+
+                    if (DamageAPI.HasModdedDamageType(damageInfo, scorchedDamage))
+                    {
+                        victim.GetComponent<CharacterBody>().AddTimedBuff(scorched, duration + (durationScale * (scorchCount-1)));
+                    }
                 }
             };
 
             On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
             {
-                orig(self, damageInfo);
                 if (damageInfo.attacker)
                 {
                     if (self.body.HasBuff(scorched))
@@ -132,6 +144,7 @@ namespace Thalassophobia.Items.Tier2
                         damageInfo.damage *= bonusDamage;
                     }
                 }
+                orig(self, damageInfo);
             };
         }
     }

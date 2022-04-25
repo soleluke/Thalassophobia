@@ -1,8 +1,12 @@
 ﻿using BepInEx.Configuration;
+using HarmonyLib;
 using R2API;
 using RoR2;
+using RoR2.Items;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace Thalassophobia.Items
@@ -42,9 +46,13 @@ namespace Thalassophobia.Items
 
         public ItemDef ItemDef;
 
+        public virtual String CorruptsItem { get; }
+
         public virtual bool CanRemove { get; } = true;
 
         public virtual bool AIBlacklisted { get; set; } = false;
+
+        public ItemDef.Pair pair;
 
         /// <summary>
         /// This method structures your code execution of this class. An example implementation inside of it would be:
@@ -114,6 +122,42 @@ namespace Thalassophobia.Items
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(itemDef);
+        }
+
+        internal static void RegisterVoidPairings(On.RoR2.Items.ContagiousItemManager.orig_Init orig)
+        {
+            var voidTiers = new ItemTier[]
+{
+                ItemTier.VoidBoss,
+                ItemTier.VoidTier1,
+                ItemTier.VoidTier2,
+                ItemTier.VoidTier3
+};
+            
+            foreach (ItemBase item in ItemHelper.Items)
+            {
+                if (item.ItemDef && voidTiers.Any(x => item.ItemDef.tier == x))
+                {
+
+                    var itemToCorrupt = ItemCatalog.itemDefs.Where(x => x.nameToken == item.CorruptsItem).First();
+                    if (!itemToCorrupt)
+                    {
+                        continue;
+                    }
+
+                    var pair = new ItemDef.Pair[]
+                    {
+                            new ItemDef.Pair
+                            {
+                                itemDef1 = itemToCorrupt,
+                                itemDef2 = item.ItemDef,
+                            }
+                    };
+
+                    ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pair);
+                }
+                orig();
+            }
         }
     }
 }

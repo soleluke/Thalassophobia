@@ -6,6 +6,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Thalassophobia.Items;
 using UnityEngine;
 using static On.RoR2.CharacterBody;
 using static R2API.SoundAPI;
@@ -16,7 +17,7 @@ namespace Thalassophobia
     // Meta data and dependencies
     [BepInDependency("com.bepis.r2api")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ContentAddition))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(DamageAPI), nameof(OrbAPI))]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class Plugin : BaseUnityPlugin
     {
@@ -58,9 +59,13 @@ namespace Thalassophobia
         }
 
         void Hooks() {
+            On.RoR2.Items.ContagiousItemManager.Init += ItemBase.RegisterVoidPairings;
+
+
             On.RoR2.CharacterBody.OnBuffFirstStackGained += (orig, self, buffDef) =>
             {
-                Log.LogInfo(buffDef.name);
+                //Log.LogInfo(buffDef.name);
+                //Log.LogInfo(System.Environment.StackTrace);
             };
         }
     }
