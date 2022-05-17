@@ -17,7 +17,7 @@ namespace Thalassophobia
     // Meta data and dependencies
     [BepInDependency("com.bepis.r2api")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(DamageAPI), nameof(OrbAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(DamageAPI), nameof(OrbAPI), nameof(RecalculateStatsAPI), nameof(LegacyResourcesAPI))]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class Plugin : BaseUnityPlugin
     {
@@ -60,7 +60,7 @@ namespace Thalassophobia
 
         void Hooks() {
             On.RoR2.Items.ContagiousItemManager.Init += ItemBase.RegisterVoidPairings;
-
+            On.RoR2.ItemTierCatalog.Init += ItemBase.RegisterItemTier;
 
             On.RoR2.CharacterBody.OnBuffFirstStackGained += (orig, self, buffDef) =>
             {

@@ -1,7 +1,9 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using Thalassophobia.Items.Lunar;
 using UnityEngine;
+using static On.RoR2.GlobalEventManager;
 using static RoR2.DotController;
 
 namespace Thalassophobia.Items.Tier1
@@ -49,11 +51,11 @@ namespace Thalassophobia.Items.Tier1
         {
             ItemTags = new ItemTag[] { ItemTag.Damage };
 
-            chance = config.Bind<float>("Item: " + ItemName, "ProcChance", 20f, "Percent chance to proc the item.").Value;
+            chance = config.Bind<float>("Item: " + ItemName, "Proc Chance", 20f, "Percent chance to proc the item.").Value;
             duration = config.Bind<float>("Item: " + ItemName, "Duration", 3f, "The amount of time the debuff lasts in seconds.").Value;
-            interval = config.Bind<float>("Item: " + ItemName, "Interval", 0.5f, "Time inbetween each damage tick.").Value;
-            scale = config.Bind<float>("Item: " + ItemName, "AttackSpeedScaling", 1.5f, "How much the interval between damage ticks decreases with attack speed.").Value;
-            damage = config.Bind<float>("Item: " + ItemName, "DamageCoefficient", 0.06f, "Percent of your damage the item deals where 1.0 is 100%.").Value;
+            interval = config.Bind<float>("Item: " + ItemName, "Interval", 1f, "Time inbetween each damage tick.").Value;
+            scale = config.Bind<float>("Item: " + ItemName, "Attack Speed Scaling", 1.5f, "How much the interval between damage ticks decreases with attack speed.").Value;
+            damage = config.Bind<float>("Item: " + ItemName, "Damage Coefficient", 0.25f, "Percent of your damage the item deals where 1.0 is 100%.").Value;
 
             BuffDef acidAffliction = ScriptableObject.CreateInstance<BuffDef>();
             acidAffliction.name = "Acidic Affliction";
@@ -83,21 +85,26 @@ namespace Thalassophobia.Items.Tier1
 
         public override void Hooks()
         {
-            On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
-            {
+            On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) => { 
                 orig(self, damageInfo, victim);
-                if (damageInfo.attacker)
+                OnHitEffect(damageInfo, victim);
+            };
+            LunarDice.hook_DiceReroll += OnHitEffect;
+        }
+
+        public void OnHitEffect(global::RoR2.DamageInfo damageInfo, GameObject victim)
+        {
+            if (damageInfo.attacker)
+            {
+                var acidCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
+                if (acidCount > 0)
                 {
-                    var acidCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
-                    if (acidCount > 0)
+                    if (Util.CheckRoll(chance * damageInfo.procCoefficient, damageInfo.attacker.GetComponent<CharacterMaster>()) && !damageInfo.rejected)
                     {
-                        if (Util.CheckRoll(chance * damageInfo.procCoefficient, damageInfo.attacker.GetComponent<CharacterMaster>()) && !damageInfo.rejected)
-                        {
-                            DotController.InflictDot(victim, damageInfo.attacker, acidDoTIndex, duration, acidCount);
-                        }
+                        DotController.InflictDot(victim, damageInfo.attacker, acidDoTIndex, duration, acidCount);
                     }
                 }
-            };
+            }
         }
     }
 }

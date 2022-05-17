@@ -3,6 +3,8 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using R2API.Utils;
+using static On.RoR2.GlobalEventManager;
+using Thalassophobia.Items.Lunar;
 
 namespace Thalassophobia.Items.Tier2
 {
@@ -66,6 +68,16 @@ namespace Thalassophobia.Items.Tier2
         }
 
         public override void Hooks()
+        {
+            On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
+            {
+                orig(self, damageInfo, victim);
+                OnHitEffect(damageInfo, victim);
+            };
+            LunarDice.hook_DiceReroll += OnHitEffect;
+        }
+
+        public void OnHitEffect(global::RoR2.DamageInfo damageInfo, GameObject victim)
         {
         }
     }

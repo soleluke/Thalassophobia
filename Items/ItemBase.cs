@@ -94,6 +94,7 @@ namespace Thalassophobia.Items
             ItemDef.pickupIconSprite = ItemIcon;
             ItemDef.hidden = false;
             ItemDef.canRemove = CanRemove;
+            ItemDef.tier = Tier;
 
             if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
 
@@ -133,19 +134,17 @@ namespace Thalassophobia.Items
                 ItemTier.VoidTier2,
                 ItemTier.VoidTier3
 };
-            
+
             foreach (ItemBase item in ItemHelper.Items)
             {
+                Log.LogInfo("check void");
                 if (item.ItemDef && voidTiers.Any(x => item.ItemDef.tier == x))
                 {
 
                     var itemToCorrupt = ItemCatalog.itemDefs.Where(x => x.nameToken == item.CorruptsItem).First();
-                    if (!itemToCorrupt)
+                    if (itemToCorrupt)
                     {
-                        continue;
-                    }
-
-                    var pair = new ItemDef.Pair[]
+                        var pair = new ItemDef.Pair[]
                     {
                             new ItemDef.Pair
                             {
@@ -153,10 +152,20 @@ namespace Thalassophobia.Items
                                 itemDef2 = item.ItemDef,
                             }
                     };
-
-                    ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pair);
+                        Log.LogInfo(ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].Length);
+                        ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pair);
+                    }
                 }
-                orig();
+            }
+            orig();
+        }
+
+        internal static void RegisterItemTier(On.RoR2.ItemTierCatalog.orig_Init orig)
+        {
+            orig();
+            foreach (ItemBase item in ItemHelper.Items)
+            {
+                item.ItemDef.tier = item.Tier;
             }
         }
     }

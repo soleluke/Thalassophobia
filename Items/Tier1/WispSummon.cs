@@ -1,17 +1,20 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using Thalassophobia.Items.Lunar;
 using UnityEngine;
+using static On.RoR2.GlobalEventManager;
+using static RoR2.DotController;
 
-namespace Thalassophobia.Items.Tier3
+namespace Thalassophobia.Items.Tier1
 {
-    public class OnKillsBuff : ItemBase<OnKillsBuff>
+    public class WispSummon : ItemBase<WispSummon>
     {
-        public override string ItemName => "Volatile Concoction";
+        public override string ItemName => "Fragile Mask";
 
-        public override string ItemLangTokenName => "ON_KILLS_BUFF";
+        public override string ItemLangTokenName => "WISP_SUMMON";
 
-        public override string ItemPickupDesc => "Trigger on kill effects on hit.";
+        public override string ItemPickupDesc => "Summons a wisp to fight for you.";
 
         public override string ItemFullDescription => "";
 
@@ -20,16 +23,11 @@ namespace Thalassophobia.Items.Tier3
             "Shipping Details:\n" +
             "";
 
-        public override ItemTier Tier => ItemTier.Tier3;
+        public override ItemTier Tier => ItemTier.Tier1;
 
         public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
         public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
-
-        // Item stats
-        private float damageThreshold;
-        private float cooldown;
-        private float damageBonus;
 
         public override void Init(ConfigFile config)
         {
@@ -42,10 +40,6 @@ namespace Thalassophobia.Items.Tier3
         public override void CreateConfig(ConfigFile config)
         {
             ItemTags = new ItemTag[] { ItemTag.Damage };
-
-            damageThreshold = config.Bind<float>("Item: " + ItemName, "DamageThreshold", 450f, "Amount of damage needed to trigger the effect.").Value;
-            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 2f, "Cooldown between triggering the effect.").Value;
-            damageBonus = config.Bind<float>("Item: " + ItemName, "Damage", 0.25f, "Damage bonus to on kill effects.").Value;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -54,6 +48,10 @@ namespace Thalassophobia.Items.Tier3
         }
 
         public override void Hooks()
+        {
+        }
+
+        public void OnHitEffect(global::RoR2.DamageInfo damageInfo, GameObject victim)
         {
         }
     }

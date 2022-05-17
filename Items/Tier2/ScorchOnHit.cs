@@ -2,8 +2,10 @@
 using R2API;
 using RoR2;
 using RoR2.Projectile;
+using Thalassophobia.Items.Lunar;
 using UnityEngine;
 using UnityEngine.Networking;
+using static On.RoR2.GlobalEventManager;
 using static R2API.DamageAPI;
 using static RoR2.DotController;
 
@@ -86,54 +88,9 @@ namespace Thalassophobia.Items.Tier2
             On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
             {
                 orig(self, damageInfo, victim);
-                if (damageInfo.attacker)
-                {
-                    var scorchCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
-                    if (scorchCount > 0 && damageInfo.procCoefficient > 0)
-                    {
-                        if (Util.CheckRoll(chance, damageInfo.attacker.GetComponent<CharacterMaster>()) && !damageInfo.rejected)
-                        {
-                            if (Plugin.DEBUG)
-                            {
-                                Log.LogInfo("Proc Candle");
-                            }
-
-                            Vector3 position = victim.transform.position;
-                            float baseDamage = (damage * damageInfo.procCoefficient) + 5;
-                            GameObject explode = UnityEngine.Object.Instantiate<GameObject>(GlobalEventManager.CommonAssets.explodeOnDeathPrefab, position, Quaternion.identity);
-                            DelayBlast blast = explode.GetComponent<DelayBlast>();
-                            if (blast)
-                            {
-                                blast.position = position;
-                                blast.baseDamage = baseDamage;
-                                blast.baseForce = 500f;
-                                blast.bonusForce = Vector3.up * 250f;
-                                blast.radius = radius + (radiusScale * (scorchCount-1));
-                                blast.attacker = damageInfo.attacker;
-                                blast.inflictor = null;
-                                blast.crit = Util.CheckRoll(damageInfo.attacker.GetComponent<CharacterBody>().crit, damageInfo.attacker.GetComponent<CharacterBody>().master);
-                                blast.maxTimer = 0.0f;
-                                blast.damageColorIndex = DamageColorIndex.Item;
-                                blast.falloffModel = BlastAttack.FalloffModel.SweetSpot;
-                                blast.procCoefficient = 0;
-                                var damageTypeComponent = blast.gameObject.AddComponent<ModdedDamageTypeHolderComponent>();
-                                damageTypeComponent.Add(scorchedDamage);
-                            }
-                            TeamFilter component7 = explode.GetComponent<TeamFilter>();
-                            if (component7)
-                            {
-                                component7.teamIndex = damageInfo.attacker.GetComponent<CharacterBody>().teamComponent.teamIndex;
-                            }
-                            NetworkServer.Spawn(explode);
-                        }
-                    }
-
-                    if (DamageAPI.HasModdedDamageType(damageInfo, scorchedDamage))
-                    {
-                        victim.GetComponent<CharacterBody>().AddTimedBuff(scorched, duration + (durationScale * (scorchCount-1)));
-                    }
-                }
+                OnHitEffect(damageInfo, victim);
             };
+            LunarDice.hook_DiceReroll += OnHitEffect;
 
             On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
             {
@@ -146,6 +103,56 @@ namespace Thalassophobia.Items.Tier2
                 }
                 orig(self, damageInfo);
             };
+        }
+        public void OnHitEffect(global::RoR2.DamageInfo damageInfo, GameObject victim)
+        {
+            if (damageInfo.attacker)
+            {
+                var scorchCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
+                if (scorchCount > 0 && damageInfo.procCoefficient > 0)
+                {
+                    if (Util.CheckRoll(chance, damageInfo.attacker.GetComponent<CharacterMaster>()) && !damageInfo.rejected)
+                    {
+                        if (Plugin.DEBUG)
+                        {
+                            Log.LogInfo("Proc Candle");
+                        }
+
+                        Vector3 position = victim.transform.position;
+                        float baseDamage = (damage * damageInfo.procCoefficient) + 5;
+                        GameObject explode = UnityEngine.Object.Instantiate<GameObject>(GlobalEventManager.CommonAssets.explodeOnDeathPrefab, position, Quaternion.identity);
+                        DelayBlast blast = explode.GetComponent<DelayBlast>();
+                        if (blast)
+                        {
+                            blast.position = position;
+                            blast.baseDamage = baseDamage;
+                            blast.baseForce = 500f;
+                            blast.bonusForce = Vector3.up * 250f;
+                            blast.radius = radius + (radiusScale * (scorchCount - 1));
+                            blast.attacker = damageInfo.attacker;
+                            blast.inflictor = null;
+                            blast.crit = Util.CheckRoll(damageInfo.attacker.GetComponent<CharacterBody>().crit, damageInfo.attacker.GetComponent<CharacterBody>().master);
+                            blast.maxTimer = 0.0f;
+                            blast.damageColorIndex = DamageColorIndex.Item;
+                            blast.falloffModel = BlastAttack.FalloffModel.SweetSpot;
+                            blast.procCoefficient = 0;
+                            var damageTypeComponent = blast.gameObject.AddComponent<ModdedDamageTypeHolderComponent>();
+                            damageTypeComponent.Add(scorchedDamage);
+                        }
+                        TeamFilter component7 = explode.GetComponent<TeamFilter>();
+                        if (component7)
+                        {
+                            component7.teamIndex = damageInfo.attacker.GetComponent<CharacterBody>().teamComponent.teamIndex;
+                        }
+                        NetworkServer.Spawn(explode);
+                    }
+                }
+
+                if (DamageAPI.HasModdedDamageType(damageInfo, scorchedDamage))
+                {
+                    victim.GetComponent<CharacterBody>().AddTimedBuff(scorched, duration + (durationScale * (scorchCount - 1)));
+                }
+            }
         }
     }
 }

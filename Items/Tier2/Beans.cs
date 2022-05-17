@@ -4,6 +4,8 @@ using RoR2;
 using UnityEngine;
 using R2API.Utils;
 using RoR2.Projectile;
+using static On.RoR2.GlobalEventManager;
+using Thalassophobia.Items.Lunar;
 
 namespace Thalassophobia.Items.Tier2
 {
@@ -71,39 +73,45 @@ namespace Thalassophobia.Items.Tier2
         {
             On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
             {
-                /*
-                if (damageInfo.attacker)
-                {
-                    var beanCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
-                    if (beanCount > 0 && !damageInfo.procChainMask.HasProc((ProcType)(ProcType.Count + 1)))
-                    {
-                        if (Util.CheckRoll(procChance * damageInfo.procCoefficient, damageInfo.attacker.GetComponent<CharacterMaster>()) && !damageInfo.rejected)
-                        {
-                            GameObject projectilePrefab = AssetManager.GetProjectile(AssetManager.ProjectileIndex.Bean);
-                            ProcChainMask procMask = damageInfo.procChainMask;
-                            procMask.AddProc((ProcType)(ProcType.Count + 1));
-                            projectilePrefab.GetComponent<ProjectileImpactExplosion>().blastRadius = radius + (radiusIncrease * (beanCount - 1));
-                            projectilePrefab.GetComponent<ProjectileImpactExplosion>().explosionEffect = AssetManager.GetEffect(AssetManager.EffectPrefabIndex.BeanPop);
-                            FireProjectileInfo info = new FireProjectileInfo();
-                            info.procChainMask = procMask;
-                            info.projectilePrefab = projectilePrefab;
-                            info.position = damageInfo.position;
-                            info.owner = damageInfo.attacker;
-                            info.damageTypeOverride = DamageType.Generic;
-                            info.damage = damageInfo.attacker.GetComponent<CharacterBody>().damage * damageCoefficient;
-                            info.crit = false;
-                            int num = Mathf.RoundToInt(Random.Range(minBeans, maxBeans));
-                            for (; num > 0; num--)
-                            {
-                                info.rotation = GetRandomLaunch();
-                                ProjectileManager.instance.FireProjectile(info);
-                            }
-                        }
-                    }
-                }
-                */
                 orig(self, damageInfo, victim);
+                OnHitEffect(damageInfo, victim);
             };
+            LunarDice.hook_DiceReroll += OnHitEffect;
+        }
+
+        public void OnHitEffect(global::RoR2.DamageInfo damageInfo, GameObject victim)
+        {
+            /*
+if (damageInfo.attacker)
+{
+    var beanCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
+    if (beanCount > 0 && !damageInfo.procChainMask.HasProc((ProcType)(ProcType.Count + 1)))
+    {
+        if (Util.CheckRoll(procChance * damageInfo.procCoefficient, damageInfo.attacker.GetComponent<CharacterMaster>()) && !damageInfo.rejected)
+        {
+            GameObject projectilePrefab = AssetManager.GetProjectile(AssetManager.ProjectileIndex.Bean);
+            ProcChainMask procMask = damageInfo.procChainMask;
+            procMask.AddProc((ProcType)(ProcType.Count + 1));
+            projectilePrefab.GetComponent<ProjectileImpactExplosion>().blastRadius = radius + (radiusIncrease * (beanCount - 1));
+            projectilePrefab.GetComponent<ProjectileImpactExplosion>().explosionEffect = AssetManager.GetEffect(AssetManager.EffectPrefabIndex.BeanPop);
+            FireProjectileInfo info = new FireProjectileInfo();
+            info.procChainMask = procMask;
+            info.projectilePrefab = projectilePrefab;
+            info.position = damageInfo.position;
+            info.owner = damageInfo.attacker;
+            info.damageTypeOverride = DamageType.Generic;
+            info.damage = damageInfo.attacker.GetComponent<CharacterBody>().damage * damageCoefficient;
+            info.crit = false;
+            int num = Mathf.RoundToInt(Random.Range(minBeans, maxBeans));
+            for (; num > 0; num--)
+            {
+                info.rotation = GetRandomLaunch();
+                ProjectileManager.instance.FireProjectile(info);
+            }
+        }
+    }
+}
+*/
         }
 
 

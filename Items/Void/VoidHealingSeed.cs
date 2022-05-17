@@ -4,6 +4,7 @@ using RoR2;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Thalassophobia.Items.Lunar;
 using Thalassophobia.Utils;
 using UnityEngine;
 using static On.RoR2.DotController;
@@ -11,7 +12,7 @@ using static RoR2.DotController;
 
 namespace Thalassophobia.Items.Void
 {
-    class VoidHealingSeed : ItemBase
+    class VoidHealingSeed : ItemBase<VoidHealingSeed>
     {
         public override string ItemName => "Parasitic Bud";
 
@@ -26,9 +27,9 @@ namespace Thalassophobia.Items.Void
             "Shipping Details:\n" +
             "";
 
-        public override ItemTier Tier => ItemTier.VoidBoss;
+        public override ItemTier Tier => ItemTier.VoidTier2;
 
-        public override String CorruptsItem => RoR2Content.Items.Seed.name;
+        public override String CorruptsItem => RoR2Content.Items.Seed.nameToken;
 
         public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
@@ -68,7 +69,7 @@ namespace Thalassophobia.Items.Void
 
             DotController.DotDef leechDef = new DotController.DotDef();
             leechDef.associatedBuff = voidLeech;
-            leechDef.damageCoefficient = 1;
+            leechDef.damageCoefficient = 0.05f;
             leechDef.damageColorIndex = DamageColorIndex.Void;
             leechDef.interval = 0.5f;
             leechDef.resetTimerOnAdd = true;
@@ -88,20 +89,14 @@ namespace Thalassophobia.Items.Void
             On.RoR2.GlobalEventManager.OnHitEnemy += (orig, self, damageInfo, victim) =>
             {
                 orig(self, damageInfo, victim);
-                if (damageInfo.attacker)
-                {
-                    var leechCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
-                    if (leechCount > 0)
-                    {
-                        InflictDot(victim, damageInfo.attacker, leechDotIndex, 5, 1, 1);
-                    }
-                }
+                OnHitEffect(damageInfo, victim);
             };
+            LunarDice.hook_DiceReroll += OnHitEffect;
 
             On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
             {
                 orig(self, damageInfo);
-                Log.LogInfo(damageInfo.dotIndex == leechDotIndex);
+                //Log.LogInfo(damageInfo.dotIndex == leechDotIndex);
                 if (damageInfo.dotIndex == leechDotIndex)
                 {
                     RoR2.Orbs.HealOrb orb = new RoR2.Orbs.HealOrb();
@@ -113,6 +108,19 @@ namespace Thalassophobia.Items.Void
                     RoR2.Orbs.OrbManager.instance.AddOrb(orb);
                 }
             };
+        }
+
+
+        public void OnHitEffect(global::RoR2.DamageInfo damageInfo, GameObject victim)
+        {
+            if (damageInfo.attacker)
+            {
+                var leechCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
+                if (leechCount > 0)
+                {
+                    InflictDot(victim, damageInfo.attacker, leechDotIndex, 5, 1, 1);
+                }
+            }
         }
     }
 }
