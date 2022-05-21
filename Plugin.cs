@@ -61,12 +61,6 @@ namespace Thalassophobia
         void Hooks() {
             On.RoR2.Items.ContagiousItemManager.Init += ItemBase.RegisterVoidPairings;
             On.RoR2.ItemTierCatalog.Init += ItemBase.RegisterItemTier;
-
-            On.RoR2.CharacterBody.OnBuffFirstStackGained += (orig, self, buffDef) =>
-            {
-                //Log.LogInfo(buffDef.name);
-                //Log.LogInfo(System.Environment.StackTrace);
-            };
         }
     }
 }

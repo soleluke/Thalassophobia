@@ -48,7 +48,7 @@ namespace Thalassophobia.Items.Tier3
             ItemTags = new ItemTag[] { ItemTag.Damage };
 
             damageThreshold = config.Bind<float>("Item: " + ItemName, "DamageThreshold", 450f, "Amount of damage needed to trigger the effect.").Value;
-            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 2f, "Cooldown between triggering the effect.").Value;
+            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 5f, "Cooldown between triggering the effect.").Value;
             damageBonus = config.Bind<float>("Item: " + ItemName, "Damage", 0.25f, "Damage bonus to on kill effects.").Value;
 
             procCooldown = ScriptableObject.CreateInstance<BuffDef>();
@@ -98,7 +98,7 @@ namespace Thalassophobia.Items.Tier3
                     {
                         if (damageInfo.damage >= damageInfo.attacker.GetComponent<CharacterBody>().damage * 4 && victim.GetComponent<CharacterBody>())
                         {
-                            if (Plugin.DEBUG) 
+                            if (Plugin.DEBUG)
                             {
                                 Log.LogInfo("Triggered Concoction");
                             }
@@ -120,6 +120,22 @@ namespace Thalassophobia.Items.Tier3
                         }
                     }
                 }
+            };
+
+            On.RoR2.GlobalEventManager.OnCharacterDeath += (orig, self, damageReport) =>
+            {
+                if (damageReport.attackerBody)
+                {
+                    float origDamage = damageReport.attackerBody.damage;
+                    int count = GetCount(damageReport.attackerBody);
+                    if (count >= 0)
+                    {
+                        damageReport.damageInfo.damage += (damageReport.damageInfo.damage * damageBonus) * count;
+                        damageReport.damageDealt += (damageReport.damageDealt * damageBonus) * count;
+                        damageReport.attackerBody.damage += (damageReport.attackerBody.damage * damageBonus) * count;
+                    }
+                }
+                orig(self, damageReport);
             };
         }
 

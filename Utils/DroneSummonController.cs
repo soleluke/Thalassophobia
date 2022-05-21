@@ -104,7 +104,7 @@ namespace Thalassophobia.Utils
                         $"Spawned with items: {s}");
                 }
                 drone.inventory.GiveItem(RoR2Content.Items.BoostHp, hp);
-                drone.inventory.GiveItem(RoR2Content.Items.BoostDamage, damage);
+                drone.inventory.GiveItem(RoR2Content.Items.BoostDamage, damage/10);
                 isActive = true;
                 drone.onBodyDestroyed += Drone_onBodyDestroyed;
             }

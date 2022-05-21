@@ -49,9 +49,7 @@ namespace Thalassophobia.Items.Tier3
 
             cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 5f, "Time between spawning drones.").Value;
             numItems = config.Bind<int>("Item: " + ItemName, "NumberOfItems", 10, "Number of items the drones copy.").Value;
-            maxDrones = config.Bind<int>("Item: " + ItemName, "MaxDrones", 3, "Max number of drones.").Value;
-            damage = config.Bind<float>("Item: " + ItemName, "Damage", 150f, "Percent damage the drones deal.").Value;
-            megaDroneChance = config.Bind<float>("Item: " + ItemName, "MegaDroneChance", 1.5f, "Percent chance to spawn a mega drone.").Value;
+            damage = config.Bind<float>("Item: " + ItemName, "Damage", 100f, "Percent damage the drones deal.").Value;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -75,7 +73,7 @@ namespace Thalassophobia.Items.Tier3
                         self.GetBodyObject().AddComponent<DroneSummonController>();
                         self.GetBodyObject().GetComponent<DroneSummonController>().owner = self;
                         self.GetBodyObject().GetComponent<DroneSummonController>().cooldown = cooldown;
-                        self.GetBodyObject().GetComponent<DroneSummonController>().damage = (int)damage / 10;
+                        self.GetBodyObject().GetComponent<DroneSummonController>().damage = (int)damage;
                         self.GetBodyObject().GetComponent<DroneSummonController>().items = numItems;
                         self.GetBodyObject().GetComponent<DroneSummonController>().summonItemCount = GetCount(self);
                     }
