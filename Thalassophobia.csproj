@@ -12,6 +12,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>5</WarningLevel>
     <OutputPath>C:\Users\josht\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\Mod Creation\BepInEx\plugins\Thalassophobia\</OutputPath>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
