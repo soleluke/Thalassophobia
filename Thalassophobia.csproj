@@ -11,8 +11,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <WarningLevel>5</WarningLevel>
-    <OutputPath>C:\Users\josht\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\Mod Creation\BepInEx\plugins\Thalassophobia\</OutputPath>
-    <DocumentationFile></DocumentationFile>
+    <OutputPath>C:\Users\Lea\AppData\Roaming\r2modmanPlus-local\RiskOfRain2\profiles\Mod Creation uwu uwu\BepInEx\plugins\iloveyoujosh</OutputPath>
   </PropertyGroup>
 
   <ItemGroup>
