@@ -19,14 +19,11 @@ namespace Thalassophobia.Items.Void
 
         public override string ItemLangTokenName => "VOID_IGNITION_TANK";
 
-        public override string ItemPickupDesc => "Corrupts all Ignition Tanks.";
+        public override string ItemPickupDesc => "Corrupts all Ignition Tanks. Your fire becomes void fog.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "Corrupts all Ignition Tanks. Fire effects cause enemies to suffocate instead. This debuff does more damage the longer enemies have it.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.VoidTier2;
 
@@ -62,7 +59,7 @@ namespace Thalassophobia.Items.Void
 
             tickPeriodSeconds = config.Bind<float>("Item: " + ItemName, "tickPeriodSeconds", 0.4f, "").Value;
             healthFractionPerTick = config.Bind<float>("Item: " + ItemName, "healthFractionPerTick", 0.01f, "").Value;
-            healthFractionRampCoefficientPerTick = config.Bind<float>("Item: " + ItemName, "healthFractionRampCoefficientPerTick", 0.1f, "").Value;
+            healthFractionRampCoefficientPerTick = config.Bind<float>("Item: " + ItemName, "healthFractionRampCoefficientPerTick", 0.01f, "").Value;
             duration = config.Bind<float>("Item: " + ItemName, "duration", 2.5f, "").Value;
 
             inflictVoid = ReserveDamageType();
@@ -89,9 +86,6 @@ namespace Thalassophobia.Items.Void
 
         private void GlobalEventManager_ProcIgniteOnKill(On.RoR2.GlobalEventManager.orig_ProcIgniteOnKill orig, DamageReport damageReport, int igniteOnKillCount, CharacterBody victimBody, TeamIndex attackerTeamIndex)
         {
-            SphereZone zone = new SphereZone();
-            zone.radius = 10.0f;
-            zone.transform.position = victimBody.transform.position;
             orig(damageReport, igniteOnKillCount, victimBody, attackerTeamIndex);
         }
 

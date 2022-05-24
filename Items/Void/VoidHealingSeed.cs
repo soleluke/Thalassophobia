@@ -20,12 +20,9 @@ namespace Thalassophobia.Items.Void
 
         public override string ItemPickupDesc => "Corrupts all Leeching Seeds. Hitting an enemy leeches that enemy.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "Corrupts all Leeching Seeds. Hitting an enemy leeches that enemy. Leeched enemies heal you for 1 (+1 per stack) HP repeatedly for 5 seconds. Only 1 stack of leech can be applied to an enemy.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.VoidTier2;
 

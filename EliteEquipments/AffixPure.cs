@@ -48,10 +48,6 @@ namespace Thalassophobia.EliteEquipments
 
         private void CreateEliteTiers()
         {
-            CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
-               {
-                R2API.EliteAPI.VanillaFirstTierDef
-               };
         }
 
         private bool SetAvailability(SpawnCard.EliteRules arg)

@@ -14,12 +14,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "Damage over time effects do more damage.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "DoT effects do +7.5% (+7.5% per stack) more damage.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier2;
 

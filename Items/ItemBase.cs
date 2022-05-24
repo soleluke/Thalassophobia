@@ -33,9 +33,7 @@ namespace Thalassophobia.Items
         public abstract string ItemName { get; }
         public abstract string ItemLangTokenName { get; }
         public abstract string ItemPickupDesc { get; }
-
-        private string itemDesc = "";
-        public virtual string ItemFullDescription { get { return itemDesc; } set { itemDesc = value; } }
+        public abstract string ItemFullDescription { get; }
         public abstract string ItemLore { get; }
 
         public abstract ItemTier Tier { get; }
@@ -72,7 +70,7 @@ namespace Thalassophobia.Items
         {
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_NAME", ItemName);
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_PICKUP", ItemPickupDesc);
-            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_DESCRIPTION", itemDesc);
+            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_DESCRIPTION", ItemFullDescription);
             LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_LORE", ItemLore);
         }
 

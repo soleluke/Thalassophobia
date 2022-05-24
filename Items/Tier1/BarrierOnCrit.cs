@@ -6,15 +6,15 @@ using R2API.Utils;
 
 namespace Thalassophobia.Items.Tier1
 {
-    public class ShieldOnCrit : ItemBase<ShieldOnCrit>
+    public class BarrierOnCrit : ItemBase<BarrierOnCrit>
     {
-        public override string ItemName => "Electric Carapace";
+        public override string ItemName => "AR Visor";
 
-        public override string ItemLangTokenName => "SHIELD_ON_CRIT";
+        public override string ItemLangTokenName => "BARRIER_ON_CRIT";
 
-        public override string ItemPickupDesc => "";
+        public override string ItemPickupDesc => "Critical strikes might give you barrier.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "25% chance on critical strikes to gain 5(+5 per stack) over shields. Gives 5% crit chance on first pickup.";
 
         public override string ItemLore => "";
 

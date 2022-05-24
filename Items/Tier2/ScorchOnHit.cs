@@ -19,12 +19,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "Chance to scorch enemies on hit.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "10% chance for attacks to become incendiary. Incendiary attacks create explosions that deal 30% total damage in a 5m (+2.5m per stack) radius and scorch enemies making them take 30% more damage for 3 (+1 per stack) seconds.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier2;
 
@@ -62,8 +59,8 @@ namespace Thalassophobia.Items.Tier2
             chance = config.Bind<float>("Item: " + ItemName, "Chance", 10.0f, "").Value;
             duration = config.Bind<float>("Item: " + ItemName, "Duration", 2.5f, "").Value;
             durationScale = config.Bind<float>("Item: " + ItemName, "Duration Scale", 1.0f, "").Value;
-            radius = config.Bind<float>("Item: " + ItemName, "Radius", 8.0f, "").Value;
-            radiusScale = config.Bind<float>("Item: " + ItemName, "Radius Scale", 1.5f, "").Value;
+            radius = config.Bind<float>("Item: " + ItemName, "Radius", 5f, "").Value;
+            radiusScale = config.Bind<float>("Item: " + ItemName, "Radius Scale", 2.5f, "").Value;
             damage = config.Bind<float>("Item: " + ItemName, "Damage", 0.30f, "").Value;
             bonusDamage = config.Bind<float>("Item: " + ItemName, "Damage Bonus", 1.30f, "").Value;
 

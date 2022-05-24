@@ -14,12 +14,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemPickupDesc => "Increases crit chance and crit damage.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "Increases crit chance by 5% (+5% per stack), and increases crit damage by 5% (+5% per stack).";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier1;
 

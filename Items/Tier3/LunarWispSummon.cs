@@ -7,21 +7,21 @@ using UnityEngine;
 using static On.RoR2.GlobalEventManager;
 using static RoR2.DotController;
 
-namespace Thalassophobia.Items.Tier1
+namespace Thalassophobia.Items.Tier3
 {
-    public class WispSummon : ItemBase<WispSummon>
+    public class LunarWispSummon : ItemBase<LunarWispSummon>
     {
-        public override string ItemName => "Fragile Mask";
+        public override string ItemName => "Chimeric Mask";
 
-        public override string ItemLangTokenName => "WISP_SUMMON";
+        public override string ItemLangTokenName => "LUNAR_WISP_SUMMON";
 
-        public override string ItemPickupDesc => "Spawn an allied wisp.";
+        public override string ItemPickupDesc => "Spawn an allied Lunar Chimera.";
 
-        public override string ItemFullDescription => "Spawns a lesser wisp to fight for you. The wisp is stronger than average and follows you, but when it dies this item is destroyed.";
+        public override string ItemFullDescription => "Spawns a Lunar Chimera to fight for you. The wisp is stronger than average and follows the player, but when it dies this item is destroyed.";
 
         public override string ItemLore => "";
 
-        public override ItemTier Tier => ItemTier.Tier1;
+        public override ItemTier Tier => ItemTier.Tier3;
 
         public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
@@ -34,7 +34,7 @@ namespace Thalassophobia.Items.Tier1
             CreateItem();
             Hooks();
 
-            WispSummonController.tier1Def = this.ItemDef;
+            WispSummonController.tier3Def = this.ItemDef;
         }
 
         public override void CreateConfig(ConfigFile config)
@@ -60,13 +60,13 @@ namespace Thalassophobia.Items.Tier1
                 if (self.GetBodyObject().GetComponent<WispSummonController>())
                 {
                     WispSummonController wispController = self.GetBodyObject().GetComponent<WispSummonController>();
-                    wispController.SummonWisp("WispMaster");
+                    wispController.SummonWisp("LunarWispMaster");
                 }
                 else
                 {
                     WispSummonController wispController = self.GetBodyObject().AddComponent<WispSummonController>();
                     wispController.owner = self;
-                    wispController.SummonWisp("WispMaster");
+                    wispController.SummonWisp("LunarWispMaster");
                 }
             }
         }

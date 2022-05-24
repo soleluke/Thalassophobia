@@ -14,12 +14,9 @@ namespace Thalassophobia.Items.Tier3
 
         public override string ItemPickupDesc => "Trigger on kill effects on hit.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "Attacks that inflict 450% or more damage trigger on kill effects. Can only proc every 2 seconds. On kill effects do 25% (+25% per stack) more damage.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier3;
 
@@ -48,7 +45,7 @@ namespace Thalassophobia.Items.Tier3
             ItemTags = new ItemTag[] { ItemTag.Damage };
 
             damageThreshold = config.Bind<float>("Item: " + ItemName, "DamageThreshold", 450f, "Amount of damage needed to trigger the effect.").Value;
-            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 5f, "Cooldown between triggering the effect.").Value;
+            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 8f, "Cooldown between triggering the effect.").Value;
             damageBonus = config.Bind<float>("Item: " + ItemName, "Damage", 0.25f, "Damage bonus to on kill effects.").Value;
 
             procCooldown = ScriptableObject.CreateInstance<BuffDef>();
@@ -116,7 +113,7 @@ namespace Thalassophobia.Items.Tier3
                             DamageReport damageReport = new DamageReport(damageInfo, victim2, damageInfo.damage, victim2.combinedHealth);
                             GlobalEventManager.instance.OnCharacterDeath(damageReport);
                             body.RemoveBuff(procReady);
-                            body.AddTimedBuff(procCooldown, 2.0f);
+                            body.AddTimedBuff(procCooldown, cooldown);
                         }
                     }
                 }

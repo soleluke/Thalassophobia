@@ -7,21 +7,21 @@ using UnityEngine;
 using static On.RoR2.GlobalEventManager;
 using static RoR2.DotController;
 
-namespace Thalassophobia.Items.Tier1
+namespace Thalassophobia.Items.Tier2
 {
-    public class WispSummon : ItemBase<WispSummon>
+    public class GreaterWispSummon : ItemBase<GreaterWispSummon>
     {
-        public override string ItemName => "Fragile Mask";
+        public override string ItemName => "Greater Mask";
 
-        public override string ItemLangTokenName => "WISP_SUMMON";
+        public override string ItemLangTokenName => "GREATER_WISP_SUMMON";
 
-        public override string ItemPickupDesc => "Spawn an allied wisp.";
+        public override string ItemPickupDesc => "Spawns an allied Greater Wisp";
 
-        public override string ItemFullDescription => "Spawns a lesser wisp to fight for you. The wisp is stronger than average and follows you, but when it dies this item is destroyed.";
+        public override string ItemFullDescription => "Spawns a Greater Wisp to fight for you. The wisp is stronger than average and follows you, but when it dies this item is destroyed.";
 
         public override string ItemLore => "";
 
-        public override ItemTier Tier => ItemTier.Tier1;
+        public override ItemTier Tier => ItemTier.Tier2;
 
         public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
@@ -34,7 +34,7 @@ namespace Thalassophobia.Items.Tier1
             CreateItem();
             Hooks();
 
-            WispSummonController.tier1Def = this.ItemDef;
+            WispSummonController.tier2Def = this.ItemDef;
         }
 
         public override void CreateConfig(ConfigFile config)
@@ -60,13 +60,13 @@ namespace Thalassophobia.Items.Tier1
                 if (self.GetBodyObject().GetComponent<WispSummonController>())
                 {
                     WispSummonController wispController = self.GetBodyObject().GetComponent<WispSummonController>();
-                    wispController.SummonWisp("WispMaster");
+                    wispController.SummonWisp("GreaterWispMaster");
                 }
                 else
                 {
                     WispSummonController wispController = self.GetBodyObject().AddComponent<WispSummonController>();
                     wispController.owner = self;
-                    wispController.SummonWisp("WispMaster");
+                    wispController.SummonWisp("GreaterWispMaster");
                 }
             }
         }

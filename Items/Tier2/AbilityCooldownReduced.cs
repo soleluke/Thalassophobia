@@ -1,5 +1,6 @@
 ﻿using BepInEx.Configuration;
 using R2API;
+using R2API.Utils;
 using RoR2;
 using UnityEngine;
 
@@ -11,14 +12,11 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemLangTokenName => "ABILITY_COOLDOWN_REDUCED";
 
-        public override string ItemPickupDesc => "Ability cooldowns reduced.";
+        public override string ItemPickupDesc => "Primary and secondary skills are faster.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "+10% (+10) attack speed and 0.3 (+0.3 per stack) seconds less cool down on primary and secondary skills. +10% (+10% per stack) attack speed";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier2;
 
@@ -57,6 +55,7 @@ namespace Thalassophobia.Items.Tier2
                 var itemCount = GetCount(self);
                 if (itemCount > 0)
                 {
+                    Reflection.SetPropertyValue<float>(self, "attackSpeed", self.attackSpeed + (0.1f * itemCount));
                     if (self.skillLocator.primary)
                     {
                         self.skillLocator.primary.flatCooldownReduction += cooldownReduction * itemCount;
@@ -64,14 +63,6 @@ namespace Thalassophobia.Items.Tier2
                     if (self.skillLocator.secondary)
                     {
                         self.skillLocator.secondary.flatCooldownReduction += cooldownReduction * itemCount;
-                    }
-                    if (self.skillLocator.utility)
-                    {
-                        self.skillLocator.utility.flatCooldownReduction += cooldownReduction * itemCount;
-                    }
-                    if (self.skillLocator.special)
-                    {
-                        self.skillLocator.special.flatCooldownReduction += cooldownReduction * itemCount;
                     }
                 }
             };

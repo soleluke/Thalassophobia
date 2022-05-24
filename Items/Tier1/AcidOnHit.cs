@@ -16,12 +16,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemPickupDesc => "Chance to inflict enemies with an acidic debuff on hit.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "20% chance to apply an acidic debuff doing 25% (+25% per stack) damage repeatedly over 3 seconds. Damage tick rate increases with attack speed.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier1;
 

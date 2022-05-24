@@ -1,5 +1,6 @@
 ﻿using BepInEx.Configuration;
 using R2API;
+using R2API.Utils;
 using RoR2;
 using UnityEngine;
 
@@ -11,10 +12,10 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemLangTokenName => "HEAL_ON_KILL";
 
-        public override string ItemPickupDesc => "Heal on kill.";
+        public override string ItemPickupDesc => "Regen on kill.";
 
-        public override string ItemFullDescription => "";
-
+        public override string ItemFullDescription => "On killing an enemy you gain regeneration for 3 (+1 per stack) seconds.";
+        
         public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
             "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
             "Shipping Details:\n" +
@@ -27,8 +28,8 @@ namespace Thalassophobia.Items.Tier1
         public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
         // Item stats
-        private float healNum;
-        private float healFraction;
+        private float time;
+        BuffDef regen;
 
         public override void Init(ConfigFile config)
         {
@@ -42,8 +43,14 @@ namespace Thalassophobia.Items.Tier1
         {
             ItemTags = new ItemTag[] { ItemTag.Healing };
 
-            healNum = config.Bind<float>("Item: " + ItemName, "ConstantHealing", 5f, "Constant amount of health to heal on every kill.").Value;
-            healFraction = config.Bind<float>("Item: " + ItemName, "PercentHealing", 0.0075f, "Percent of max health to heal where 1.0 is 100%.").Value;
+            time = config.Bind<float>("Item: " + ItemName, "Time", 3f, "").Value;
+
+            regen = ScriptableObject.CreateInstance<BuffDef>();
+            regen.name = "Fungus Regeneration";
+            regen.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            regen.canStack = true;
+            regen.isDebuff = false;
+            ContentAddition.AddBuffDef(regen);
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -53,16 +60,24 @@ namespace Thalassophobia.Items.Tier1
 
         public override void Hooks()
         {
+            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
+            {
+                orig(self);
+                int count = self.GetBuffCount(regen);
+                if (count > 0)
+                {
+                    Reflection.SetPropertyValue<float>(self, "regen", self.regen + 0.6f * count);
+                }
+            };
+
             On.RoR2.GlobalEventManager.OnCharacterDeath += (orig, self, damageReport) => {
                 orig(self, damageReport);
                 if (damageReport.attacker)
                 {
-                    var itemCountPF = GetCount(damageReport.attackerBody);
-                    if (itemCountPF > 0)
+                    var itemCount = GetCount(damageReport.attackerBody);
+                    if (itemCount > 0)
                     {
-                        RoR2.HealthComponent health = damageReport.attackerBody.healthComponent;
-
-                        health.Heal(healNum * itemCountPF + (healFraction * itemCountPF * health.fullHealth), damageReport.damageInfo.procChainMask);
+                        damageReport.attackerBody.AddTimedBuff(regen, 3 + (1 * itemCount));
                     }
                 }
             };

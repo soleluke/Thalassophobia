@@ -16,12 +16,9 @@ namespace Thalassophobia.Items.Lunar
 
         public override string ItemPickupDesc => "Amplifies the damage you take, but is applied over time.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "You take 100% (+50% per stack) more damage, but it is applied to you over 4 (+1.5 per stack) seconds.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Lunar;
 

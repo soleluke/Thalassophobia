@@ -12,14 +12,11 @@ namespace Thalassophobia.Items.Tier3
 
         public override string ItemLangTokenName => "DRONE_SUMMON";
 
-        public override string ItemPickupDesc => "Summon powerful drones that copy your items.";
+        public override string ItemPickupDesc => "Summon a powerful drone that copies your items.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "Summons a TC-280 Prototype to fight for you. It copies 10 (+10 per stack) of your items.";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier3;
 
