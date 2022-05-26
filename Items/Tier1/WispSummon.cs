@@ -17,7 +17,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemPickupDesc => "Spawn an allied wisp.";
 
-        public override string ItemFullDescription => "Spawns a lesser wisp to fight for you. The wisp is stronger than average and follows you, but when it dies this item is destroyed.";
+        public override string ItemFullDescription => "Spawns a <style=cIsUtility>Lesser Wisp</style> to fight for you. The wisp has <style=cIsDamage>200%</style> damage and <style=cIsHealing>200%</style> health. When the wisp dies this item <style=cIsUtility>breaks</style>.";
 
         public override string ItemLore => "";
 

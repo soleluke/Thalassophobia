@@ -14,7 +14,7 @@ namespace Thalassophobia.Items.Tier3
 
         public override string ItemPickupDesc => "Summon a powerful drone that copies your items.";
 
-        public override string ItemFullDescription => "Summons a TC-280 Prototype to fight for you. It copies 10 (+10 per stack) of your items.";
+        public override string ItemFullDescription => "Summons a <style=cIsUtility>TC-280 Prototype</style> to fight for you. It copies <style=cIsUtility>10</style> <style=cStack>(+10 per stack)</style> of your <style=cIsUtility>items</style>.";
 
         public override string ItemLore => "";
 
@@ -42,7 +42,7 @@ namespace Thalassophobia.Items.Tier3
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.CannotCopy };
+            ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.CannotCopy, ItemTag.Utility };
 
             cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 5f, "Time between spawning drones.").Value;
             numItems = config.Bind<int>("Item: " + ItemName, "NumberOfItems", 10, "Number of items the drones copy.").Value;

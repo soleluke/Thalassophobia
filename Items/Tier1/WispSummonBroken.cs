@@ -17,7 +17,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemPickupDesc => "Alled wisp HP increased.";
 
-        public override string ItemFullDescription => "HP of allied wisps is increased by 20% (+20% per stack).";
+        public override string ItemFullDescription => "<style=cIsHealing>HP</style> of <style=cIsUtility>allied wisps</style> is increased by <style=cIsHealing>20%</style> <style=cStack>(+20% per stack)</style>.";
 
         public override string ItemLore => "";
 
@@ -39,7 +39,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] {};
+            ItemTags = new ItemTag[] { ItemTag.Utility };
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

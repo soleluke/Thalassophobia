@@ -14,7 +14,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "The more items you have, the more powerful you become.";
 
-        public override string ItemFullDescription => "Gain +3% (+2% per stack) damage and +3% (+2% per stack) attack speed for every damage item you have.";
+        public override string ItemFullDescription => "Gain <style=cIsDamage>+3%</style> <style=cStack>(+2% per stack)</style> damage and attack speed for <style=cIsDamage>every damage item you have</style>.";
 
         public override string ItemLore => "";
 
@@ -55,29 +55,30 @@ namespace Thalassophobia.Items.Tier2
 
         public override void Hooks()
         {
-            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            var count = GetCount(sender);
+            if (count > 0)
             {
-                orig(self);
-                var count = GetCount(self);
-                if (count > 0)
+                float damageIncrease = 0;
+                float attackSpeedIncrease = 0;
+                float damageItems = 0;
+                Inventory inventory = sender.master.inventory;
+                foreach (ItemIndex index in inventory.itemAcquisitionOrder)
                 {
-                    float damageIncrease = 0;
-                    float attackSpeedIncrease = 0;
-                    float damageItems = 0;
-                    Inventory inventory = self.master.inventory;
-                    foreach (ItemIndex index in inventory.itemAcquisitionOrder)
+                    if (ItemCatalog.GetItemDef(index).ContainsTag(ItemTag.Damage))
                     {
-                        if (ItemCatalog.GetItemDef(index).ContainsTag(ItemTag.Damage))
-                        {
-                            damageItems += self.inventory.GetItemCount(index);
-                        }
+                        damageItems += sender.inventory.GetItemCount(index);
                     }
-                    damageIncrease = (damageUp + (damageUpStack * (count - 1))) * damageItems;
-                    attackSpeedIncrease = (attackSpeedUp + attackSpeedUpStack * (count - 1)) * damageItems;
-                    Reflection.SetPropertyValue<float>(self, "damage", self.damage + (self.damage * damageIncrease));
-                    Reflection.SetPropertyValue<float>(self, "attackSpeed", self.attackSpeed + (self.attackSpeed * attackSpeedIncrease));
                 }
-            };
+                damageIncrease = (damageUp + (damageUpStack * (count - 1))) * damageItems;
+                attackSpeedIncrease = (attackSpeedUp + attackSpeedUpStack * (count - 1)) * damageItems;
+                args.attackSpeedMultAdd += attackSpeedIncrease;
+                args.damageMultAdd += damageIncrease;
+            }
         }
     }
 }

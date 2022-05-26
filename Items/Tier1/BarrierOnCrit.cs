@@ -12,9 +12,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemLangTokenName => "BARRIER_ON_CRIT";
 
-        public override string ItemPickupDesc => "Critical strikes might give you barrier.";
+        public override string ItemPickupDesc => "Chance for critical strikes give you barrier.";
 
-        public override string ItemFullDescription => "25% chance on critical strikes to gain 5(+5 per stack) over shields. Gives 5% crit chance on first pickup.";
+        public override string ItemFullDescription => "<style=cIsHealing>25%</style> chance on critical strike to gain <style=cIsHealing>5 barrier</style> <style=cStack>(+5 per stack)</style>.";
 
         public override string ItemLore => "";
 
@@ -38,7 +38,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Damage };
+            ItemTags = new ItemTag[] { ItemTag.Healing };
 
             shieldGain = config.Bind<float>("Item: " + ItemName, "Shield Gained", 5f, "").Value;
             chance = config.Bind<float>("Item: " + ItemName, "Chance", 25f, "").Value;
@@ -51,17 +51,18 @@ namespace Thalassophobia.Items.Tier1
 
         public override void Hooks()
         {
-            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
-            {
-                orig(self);
-                int count = GetCount(self);
-                if (count > 0)
-                {
-                    Reflection.SetPropertyValue<float>(self, "crit", self.crit + 5f);
-                }
-            };
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
 
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            int count = GetCount(sender);
+            if (count > 0)
+            {
+                args.critAdd += 5f;
+            }
         }
 
         private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)

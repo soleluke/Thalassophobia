@@ -19,7 +19,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "Chance to scorch enemies on hit.";
 
-        public override string ItemFullDescription => "10% chance for attacks to become incendiary. Incendiary attacks create explosions that deal 30% total damage in a 5m (+2.5m per stack) radius and scorch enemies making them take 30% more damage for 3 (+1 per stack) seconds.";
+        public override string ItemFullDescription => "<style=cIsDamage>10%</style> chance for attacks to become <style=cIsUtility>incendiary</style>. Incendiary attacks create explosions that deal <style=cIsDamage>30% total damage</style> in a <style=cIsDamage>5m</style> <style=cStack>(+2.5m per stack)</style> radius and scorch enemies making them take <style=cIsDamage>30% more damage</style> for <style=cIsUtility>3</style> <style=cStack>(+1 per stack)</style> seconds.";
 
         public override string ItemLore => "";
 
@@ -54,7 +54,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Damage };
+            ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.Utility};
 
             chance = config.Bind<float>("Item: " + ItemName, "Chance", 10.0f, "").Value;
             duration = config.Bind<float>("Item: " + ItemName, "Duration", 2.5f, "").Value;

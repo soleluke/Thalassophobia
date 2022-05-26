@@ -14,7 +14,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "Damage over time effects do more damage.";
 
-        public override string ItemFullDescription => "DoT effects do +7.5% (+7.5% per stack) more damage.";
+        public override string ItemFullDescription => "DoT effects do <style=cIsDamage>+7.5%</style> <style=cStack>(+7.5% per stack)</style> more damage.";
 
         public override string ItemLore => "";
 

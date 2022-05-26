@@ -97,11 +97,10 @@ namespace Thalassophobia.Utils
                 int tier1Broken = owner.GetBody().inventory.GetItemCount(tier1BrokenDef);
                 int tier2Broken = owner.GetBody().inventory.GetItemCount(tier2BrokenDef);
                 int tier3Broken = owner.GetBody().inventory.GetItemCount(tier3BrokenDef);
-                int helperBroken = owner.GetBody().inventory.GetItemCount(helperDef);
 
-                wisp.inventory.GiveItem(RoR2Content.Items.BoostHp, 40 + (8 * tier1Broken));
-                wisp.inventory.GiveItem(RoR2Content.Items.BoostDamage, 20 + (9 * tier2Broken));
-                wisp.inventory.GiveItem(RoR2Content.Items.BoostAttackSpeed, 5 + (5 * tier2Broken));
+                wisp.inventory.GiveItem(RoR2Content.Items.BoostHp, 10 + (2 * tier1Broken));
+                wisp.inventory.GiveItem(RoR2Content.Items.BoostDamage, 10 + (3 * tier2Broken));
+                wisp.inventory.GiveItem(RoR2Content.Items.BoostAttackSpeed, 5 + (3 * tier2Broken));
                 wisp.inventory.GiveItem(helperDef, 1 + tier1Broken + tier2Broken * 3 + tier3Broken * 10);
                 wisp.inventory.GiveItem(RoR2Content.Items.TeamSizeDamageBonus, tier3Broken);
                 wisp.inventory.GiveItem(RoR2Content.Items.ShinyPearl, tier3Broken * 5);
@@ -157,6 +156,10 @@ namespace Thalassophobia.Utils
                 Log.LogInfo(obj.baseNameToken);
             }
             wisps.Remove(obj.master);
+            EffectData effect = new EffectData
+            {
+                origin = owner.GetBody().transform.position
+            };
             switch (obj.baseNameToken)
             {
                 case "WISP_BODY_NAME":
@@ -165,6 +168,8 @@ namespace Thalassophobia.Utils
                     CharacterMasterNotificationQueue.PushItemTransformNotification(owner,
                         tier1Def.itemIndex, tier1BrokenDef.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
                     UpdateWispPower(tier1BrokenDef);
+                    effect.SetNetworkedObjectReference(base.gameObject);
+                    EffectManager.SpawnEffect(HealthComponent.AssetReferences.fragileDamageBonusBreakEffectPrefab, effect, true);
                     break;
                 case "GREATERWISP_BODY_NAME":
                     owner.inventory.RemoveItem(tier2Def);
@@ -172,6 +177,8 @@ namespace Thalassophobia.Utils
                     CharacterMasterNotificationQueue.PushItemTransformNotification(owner,
                        tier2Def.itemIndex, tier2BrokenDef.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
                     UpdateWispPower(tier2BrokenDef);
+                    effect.SetNetworkedObjectReference(base.gameObject);
+                    EffectManager.SpawnEffect(HealthComponent.AssetReferences.fragileDamageBonusBreakEffectPrefab, effect, true);
                     break;
                 case "LUNARWISP_BODY_NAME":
                     owner.inventory.RemoveItem(tier3Def);
@@ -179,6 +186,8 @@ namespace Thalassophobia.Utils
                     CharacterMasterNotificationQueue.PushItemTransformNotification(owner,
                        tier3Def.itemIndex, tier3BrokenDef.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
                     UpdateWispPower(tier3BrokenDef);
+                    effect.SetNetworkedObjectReference(base.gameObject);
+                    EffectManager.SpawnEffect(HealthComponent.AssetReferences.fragileDamageBonusBreakEffectPrefab, effect, true);
                     break;
             }
         }

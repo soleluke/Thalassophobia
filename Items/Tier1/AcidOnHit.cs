@@ -14,9 +14,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemLangTokenName => "ACID_ON_HIT";
 
-        public override string ItemPickupDesc => "Chance to inflict enemies with an acidic debuff on hit.";
+        public override string ItemPickupDesc => "Chance to coat enemies with acid on hit.";
 
-        public override string ItemFullDescription => "20% chance to apply an acidic debuff doing 25% (+25% per stack) damage repeatedly over 3 seconds. Damage tick rate increases with attack speed.";
+        public override string ItemFullDescription => "<style=cIsDamage>20%</style> chance to <style=cIsDamage>coat enemies with acid</style> doing <style=cIsDamage>25%</style> <style=cStack>(+25% per stack)</style> base damage 6 times over 3 seconds. The amount of times it deals damage <style=cIsDamage>scales with attack speed</style>.";
 
         public override string ItemLore => "";
 

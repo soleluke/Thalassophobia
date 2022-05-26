@@ -12,14 +12,11 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemLangTokenName => "HEAL_ON_KILL";
 
-        public override string ItemPickupDesc => "Regen on kill.";
+        public override string ItemPickupDesc => "Gain a burst of regeneration on killing an enemy.";
 
-        public override string ItemFullDescription => "On killing an enemy you gain regeneration for 3 (+1 per stack) seconds.";
+        public override string ItemFullDescription => "Gain <style=cIsHealing>regeneration</style> for <style=cIsHealing>3</style> <style=cStack>(+1 per stack)</style> seconds on killing an enemy.";
         
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Tier1;
 
@@ -41,7 +38,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Healing };
+            ItemTags = new ItemTag[] { ItemTag.Healing, ItemTag.OnKillEffect };
 
             time = config.Bind<float>("Item: " + ItemName, "Time", 3f, "").Value;
 

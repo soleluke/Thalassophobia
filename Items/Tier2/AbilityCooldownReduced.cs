@@ -14,7 +14,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "Primary and secondary skills are faster.";
 
-        public override string ItemFullDescription => "+10% (+10) attack speed and 0.3 (+0.3 per stack) seconds less cool down on primary and secondary skills. +10% (+10% per stack) attack speed";
+        public override string ItemFullDescription => "<style=cIsDamage>+10%</style> <style=cStack>(+10% per stack)</style> attack speed and <style=cIsUtility>10%</style> <style=cStack>(+10% per stack)</style> less cool down on primary and secondary skills.";
 
         public override string ItemLore => "";
 
@@ -39,7 +39,7 @@ namespace Thalassophobia.Items.Tier2
         {
             ItemTags = new ItemTag[] { ItemTag.Utility };
 
-            cooldownReduction = config.Bind<float>("Item: " + ItemName, "CooldownReduction", 0.3f, "Amount of time ability cooldowns and reduced by.").Value;
+            cooldownReduction = config.Bind<float>("Item: " + ItemName, "Cooldown Reduction Multiplier", 0.1f, "Amount of time ability cooldowns and reduced by.").Value;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -49,23 +49,18 @@ namespace Thalassophobia.Items.Tier2
 
         public override void Hooks()
         {
-            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            var count = GetCount(sender);
+            if (count > 0)
             {
-                orig(self);
-                var itemCount = GetCount(self);
-                if (itemCount > 0)
-                {
-                    Reflection.SetPropertyValue<float>(self, "attackSpeed", self.attackSpeed + (0.1f * itemCount));
-                    if (self.skillLocator.primary)
-                    {
-                        self.skillLocator.primary.flatCooldownReduction += cooldownReduction * itemCount;
-                    }
-                    if (self.skillLocator.secondary)
-                    {
-                        self.skillLocator.secondary.flatCooldownReduction += cooldownReduction * itemCount;
-                    }
-                }
-            };
+                args.attackSpeedMultAdd += 0.1f * count;
+                args.primaryCooldownMultAdd -= cooldownReduction * count;
+                args.secondaryCooldownMultAdd -= cooldownReduction * count;
+            }
         }
     }
 }

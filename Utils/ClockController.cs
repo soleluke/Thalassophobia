@@ -12,9 +12,9 @@ namespace Thalassophobia.Utils
     {
         public float time = 1f;
         public ModdedDamageType damageType;
-        public DamageColorIndex index;
         public CharacterBody owner;
         public List<Stack<float>> pendingDamage = new List<Stack<float>>();
+        public float multiplier = 1f;
 
         private void FixedUpdate()
         {
@@ -39,7 +39,7 @@ namespace Thalassophobia.Utils
                     {
                         attacker = null,
                         crit = false,
-                        damage = totalDamage,
+                        damage = totalDamage * multiplier,
                         force = Vector3.zero,
                         inflictor = null,
                         position = owner.corePosition,
@@ -48,6 +48,11 @@ namespace Thalassophobia.Utils
                     };
                     DamageAPI.AddModdedDamageType(damageInfo, damageType);
                     owner.healthComponent.TakeDamage(damageInfo);
+                }
+
+                if (pendingDamage.Count == 0)
+                {
+                    multiplier = 1f;
                 }
             }
         }

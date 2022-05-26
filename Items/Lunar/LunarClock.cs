@@ -14,9 +14,9 @@ namespace Thalassophobia.Items.Lunar
 
         public override string ItemLangTokenName => "LUNAR_CLOCK";
 
-        public override string ItemPickupDesc => "Amplifies the damage you take, but is applied over time.";
+        public override string ItemPickupDesc => "Damage taken is applied over time... <style=cDeath>BUT increases the damage taken.</style>";
 
-        public override string ItemFullDescription => "You take 100% (+50% per stack) more damage, but it is applied to you over 4 (+1.5 per stack) seconds.";
+        public override string ItemFullDescription => "<style=cIsHealing>All damage is applied to you over 4 seconds</style> <style=cStack>(+2 per stack)</style>, but You take <style=cDeath>30% more damage</style> <style=cStack>(+30% per stack)</style> every time you take damage.";
 
         public override string ItemLore => "";
 
@@ -28,7 +28,6 @@ namespace Thalassophobia.Items.Lunar
 
         // Item Stats
         private float damageMultiplier;
-        private float multiplerScaling;
         private float timePeriod;
         private float peridScaling;
 
@@ -44,12 +43,11 @@ namespace Thalassophobia.Items.Lunar
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Healing };
+            ItemTags = new ItemTag[] { ItemTag.Cleansable };
 
-            damageMultiplier = config.Bind<float>("Item: " + ItemName, "Damage Multiplier", 2f, "How much extra damage you take.").Value;
-            multiplerScaling = config.Bind<float>("Item: " + ItemName, "Damage Scaling", 0.5f, "").Value;
+            damageMultiplier = config.Bind<float>("Item: " + ItemName, "Damage Multiplier", 0.30f, "How much extra damage you take.").Value;
             timePeriod = config.Bind<float>("Item: " + ItemName, "Time", 4f, "How long the damage is dealt to you.").Value;
-            peridScaling = config.Bind<float>("Item: " + ItemName, "Time Scaling", 1.5f, "").Value;
+            peridScaling = config.Bind<float>("Item: " + ItemName, "Time Scaling", 2f, "").Value;
 
             lunarClockDamage = ReserveDamageType();
         }
@@ -69,18 +67,18 @@ namespace Thalassophobia.Items.Lunar
             if (self.body && GetCount(self.body) > 0 && !DamageAPI.HasModdedDamageType(damageInfo, lunarClockDamage))
             {
                 int count = GetCount(self.body);
-                float totalDamage = damageInfo.damage * (damageMultiplier + (multiplerScaling * (count - 1)));
                 float times = timePeriod + (peridScaling * (count - 1));
                 Stack<float> damageStack = new Stack<float>();
                 for (int i = 0; i < times; i++)
                 {
-                    damageStack.Push(totalDamage / times);
+                    damageStack.Push(damageInfo.damage / times);
                 }
 
                 if (self.body.gameObject.GetComponent<ClockController>())
                 {
                     ClockController controller = self.body.gameObject.GetComponent<ClockController>();
                     controller.pendingDamage.Add(damageStack);
+                    controller.multiplier += damageMultiplier * count * damageInfo.procCoefficient;
                 }
                 else
                 {
@@ -88,6 +86,7 @@ namespace Thalassophobia.Items.Lunar
                     controller.owner = self.body;
                     controller.damageType = lunarClockDamage;
                     controller.pendingDamage.Add(damageStack);
+                    controller.multiplier += damageMultiplier * count * damageInfo.procCoefficient;
                 }
             }
             else

@@ -17,7 +17,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "Allied wisp damage and attack speed up.";
 
-        public override string ItemFullDescription => "Damage and attack speed of allied wisps is increased by 30% (+30% per stack).";
+        public override string ItemFullDescription => "<style=cIsDamage>Damage and attack speed</style> of <style=cIsUtility>allied wisps</style> is increased by <style=cIsDamage>20%</style> <style=cStack>(+20% per stack)</style>.";
 
         public override string ItemLore => "";
 

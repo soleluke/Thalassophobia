@@ -12,9 +12,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemLangTokenName => "HEAL_MORE_ON_KILL";
 
-        public override string ItemPickupDesc => "Increases the amount of healing you receive after slaying an enemy.";
+        public override string ItemPickupDesc => "On killing an enemy, gain a buff that gives <style=cIsHealing>7% increased healing</style> and <style=cIsUtility>5 armor</style> that can stack <style=cIsUtility>3</style> <style=cStack>(+1 per stack)</style> times.";
 
-        public override string ItemFullDescription => "On killing an enemy, gain a buff that gives 7% increased healing and 5 armor that can stack 3 (+1 per stack) times. (hehe jojo reference)";
+        public override string ItemFullDescription => "";
 
         public override string ItemLore => "";
 
@@ -43,7 +43,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Healing };
+            ItemTags = new ItemTag[] { ItemTag.Healing, ItemTag.OnKillEffect };
 
             healUp = config.Bind<float>("Item: " + ItemName, "HealingIncrease", 0.07f, "Percent of extra healing from the buff gained after killing an enemy.").Value;
             baseMaxBuffs = config.Bind<int>("Item: " + ItemName, "MaxBuffStacks", 3, "The amount of times you can stack the buff.").Value;

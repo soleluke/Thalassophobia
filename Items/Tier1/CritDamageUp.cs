@@ -14,7 +14,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override string ItemPickupDesc => "Increases crit chance and crit damage.";
 
-        public override string ItemFullDescription => "Increases crit chance by 5% (+5% per stack), and increases crit damage by 5% (+5% per stack).";
+        public override string ItemFullDescription => "Increases chance to 'critically strike' by <style=cIsDamage>5%</style> <style=cStack>(+5% per stack)</style>, and increases 'critical strike' damage by  <style=cIsDamage>5%</style> <style=cStack>(+5% per stack)</style>.";
 
         public override string ItemLore => "";
 
@@ -51,28 +51,17 @@ namespace Thalassophobia.Items.Tier1
 
         public override void Hooks()
         {
-            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
-            {
-                orig(self);
-                int critDamageUpCount = GetCount(self);
-                if (critDamageUpCount > 0)
-                {
-                    Reflection.SetPropertyValue<float>(self, "crit", self.crit + (critUp * critDamageUpCount));
-                }
-            };
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+        }
 
-            On.RoR2.HealthComponent.TakeDamage += (orig, self, damageInfo) =>
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            int critDamageUpCount = GetCount(sender);
+            if (critDamageUpCount > 0)
             {
-                if (damageInfo.attacker)
-                {
-                    var critDamageUpCount = GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
-                    if (damageInfo.crit && critDamageUpCount > 0)
-                    {
-                        damageInfo.damage += (damageInfo.damage * damageUp) * critDamageUpCount;
-                    }
-                }
-                orig(self, damageInfo);
-            };
+                args.critAdd += critUp * critDamageUpCount;
+                args.critDamageMultAdd += damageUp * critDamageUpCount;
+            }
         }
     }
 }

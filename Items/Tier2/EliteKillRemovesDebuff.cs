@@ -12,9 +12,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemLangTokenName => "DEBUFF_TIME_DOWN";
 
-        public override string ItemPickupDesc => "Killing an elite removes a buff";
+        public override string ItemPickupDesc => "Killing an elite removes a debuff";
 
-        public override string ItemFullDescription => "Killing an elite removes 1 (+1 per stack) debuff. Can only be triggered every 5 seconds.";
+        public override string ItemFullDescription => "Killing an elite monster removes <style=cIsUtility>1</style> <style=cStack>(+1 per stack)</style> debuff. Can only be triggered every <style=cIsUtility>5</style> seconds.";
 
         public override string ItemLore => "";
 
@@ -37,7 +37,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Utility };
+            ItemTags = new ItemTag[] { ItemTag.Utility, ItemTag.OnKillEffect };
 
             cooldown = ScriptableObject.CreateInstance<BuffDef>();
             cooldown.name = "Elite Cleansing Cooldown";
@@ -107,8 +107,6 @@ namespace Thalassophobia.Items.Tier2
                 }
             }
         }
-
-
         public class CleanseOnKill : CharacterBody.ItemBehavior
         {
             private void Start()
@@ -141,7 +139,7 @@ namespace Thalassophobia.Items.Tier2
                 {
                     if (Plugin.DEBUG)
                     {
-                        Log.LogInfo("Cleanse Ready");
+                        //Log.LogInfo("Cleanse Ready");
                     }
                     this.body.AddBuff(ready);
                 }

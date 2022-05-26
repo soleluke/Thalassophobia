@@ -50,6 +50,8 @@ namespace Thalassophobia.Items
 
         public virtual bool AIBlacklisted { get; set; } = false;
 
+        public bool isHidden = false;
+
         public ItemDef.Pair pair;
 
         /// <summary>
@@ -90,7 +92,7 @@ namespace Thalassophobia.Items
             ItemDef.loreToken = "ITEM_" + ItemLangTokenName + "_LORE";
             ItemDef.pickupModelPrefab = ItemModel;
             ItemDef.pickupIconSprite = ItemIcon;
-            ItemDef.hidden = false;
+            ItemDef.hidden = isHidden;
             ItemDef.canRemove = CanRemove;
             ItemDef.tier = Tier;
 
@@ -135,7 +137,7 @@ namespace Thalassophobia.Items
 
             foreach (ItemBase item in ItemHelper.Items)
             {
-                Log.LogInfo("check void");
+                //Log.LogInfo("check void");
                 if (item.ItemDef && voidTiers.Any(x => item.ItemDef.tier == x))
                 {
 
@@ -150,7 +152,7 @@ namespace Thalassophobia.Items
                                 itemDef2 = item.ItemDef,
                             }
                     };
-                        Log.LogInfo(ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].Length);
+                        //Log.LogInfo(ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].Length);
                         ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pair);
                     }
                 }
@@ -163,7 +165,14 @@ namespace Thalassophobia.Items
             orig();
             foreach (ItemBase item in ItemHelper.Items)
             {
+                Log.LogInfo(item.ItemDef.name + " try assign tier: " + item.Tier);
                 item.ItemDef.tier = item.Tier;
+                if (item.Tier == ItemTier.NoTier)
+                {
+                    item.ItemDef._itemTierDef = null;
+                    item.ItemDef.deprecatedTier = ItemTier.NoTier;
+                }
+                Log.LogInfo(item.ItemName + " is assigned to tier: " + item.ItemDef.tier);
             }
         }
     }

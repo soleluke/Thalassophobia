@@ -19,17 +19,11 @@ namespace Thalassophobia.Items.Lunar
 
         public override string ItemLangTokenName => "LUNAR_DICE";
 
-        public override string ItemPickupDesc => "You feel lucky, but you have no skill.";
+        public override string ItemPickupDesc => "You feel lucky... <style=cDeath>BUT you have no skill.</style>";
 
-        public override string ItemFullDescription => "All random on hit effects are rolled <style=cIsUtility>+1</style> <style=cStack>(+1 per stack)</style> " +
-                "times regardless of outcome allowing items to <style=cIsUtility>proc multiple times</style>. All attacks gain a " +
-                $"<style=cDeath>20% chance to miss</style> <style=cStack>(+20% per stack)</style>.\n" +
-                "<style=cArtifact>Skill Issue</style>";
+        public override string ItemFullDescription => "All random on hit effects are <style=cIsUtility>rolled +1</style> <style=cStack>(+1 per stack)</style> times regardless of outcome allowing items to <style=cIsUtility>proc multiple times</style>. All attacks gain a <style=cDeath>20% chance to miss</style> <style=cStack>(+20% per stack)</style>. <style=cArtifact>Skill Issue</style>";
 
-        public override string ItemLore => "Order: Armor-Piercing Rounds, 50mm\nTracking Number: 15***********\nEstimated Delivery: 3/07/2056\n" +
-            "Shipping Method: Standard\nShipping Address: Fort Margaret, Jonesworth System\n" +
-            "Shipping Details:\n" +
-            "";
+        public override string ItemLore => "";
 
         public override ItemTier Tier => ItemTier.Lunar;
 

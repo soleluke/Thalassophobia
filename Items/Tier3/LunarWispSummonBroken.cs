@@ -17,7 +17,7 @@ namespace Thalassophobia.Items.Tier3
 
         public override string ItemPickupDesc => "Your wisps become incredibly powerful.";
 
-        public override string ItemFullDescription => "All allied wisps gain 50% (+50% per stack) increased stats, and spawn as elites. Wisps become stronger the more allies you have.";
+        public override string ItemFullDescription => "Increase all stats of <style=cIsUtility>allied wisps</style> by <style=cIsDamage>50%</style> <style=cStack>(+50% per stack)</style>. <style=cIsUtility>Allied wisps</style> spawn as <style=cIsDamage>elites</style> and become <style=cIsUtility>stronger the more allies you have</style>.";
 
         public override string ItemLore => "";
 

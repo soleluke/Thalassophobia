@@ -12,9 +12,9 @@ namespace Thalassophobia.Items.Tier3
 
         public override string ItemLangTokenName => "PROC_ON_KILLS";
 
-        public override string ItemPickupDesc => "Trigger on kill effects on hit.";
+        public override string ItemPickupDesc => "High damage hits trigger on kill effects.";
 
-        public override string ItemFullDescription => "Attacks that inflict 450% or more damage trigger on kill effects. Can only proc every 2 seconds. On kill effects do 25% (+25% per stack) more damage.";
+        public override string ItemFullDescription => "Attacks that deal <style=cIsDamage>450% or more damage</style> trigger <style=cIsDamage>on kill effects</style>. Recharges every <style=cIsUtility>8</style> seconds. On kill effects do <style=cIsDamage>25%</style> <style=cStack>(+25% per stack)</style> more damage.";
 
         public override string ItemLore => "";
 
@@ -42,7 +42,7 @@ namespace Thalassophobia.Items.Tier3
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Damage };
+            ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.OnKillEffect };
 
             damageThreshold = config.Bind<float>("Item: " + ItemName, "DamageThreshold", 450f, "Amount of damage needed to trigger the effect.").Value;
             cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 8f, "Cooldown between triggering the effect.").Value;

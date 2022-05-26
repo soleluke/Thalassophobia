@@ -53,33 +53,18 @@ namespace Thalassophobia.Items.Tier1
 
         public override void Hooks()
         {
-            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
-            {
-                orig(self);
-                int count = GetCount(self);
-                if (count > 0)
-                {
-                    Reflection.SetPropertyValue<float>(self, "regen", self.regen + (self.level*0.1f) + (0.02f * count));
-                    Reflection.SetPropertyValue<float>(self, "moveSpeed", self.moveSpeed * 1.5f);
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+        }
 
-                    if (self.skillLocator.primary)
-                    {
-                        self.skillLocator.primary.cooldownScale -= 0.2f + 0.02f * count;
-                    }
-                    if (self.skillLocator.secondary)
-                    {
-                        self.skillLocator.secondary.cooldownScale -= 0.2f + 0.02f * count;
-                    }
-                    if (self.skillLocator.utility)
-                    {
-                        self.skillLocator.utility.cooldownScale -= 0.2f + 0.02f * count;
-                    }
-                    if (self.skillLocator.special)
-                    {
-                        self.skillLocator.special.cooldownScale -= 0.2f + 0.02f * count;
-                    }
-                }
-            };
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            int count = GetCount(sender);
+            if (count > 0)
+            {
+                args.baseRegenAdd += sender.level * (0.02f * count);
+                args.moveSpeedMultAdd += 0.25f;
+                args.cooldownMultAdd -= 0.2f + 0.02f * count;
+            }
         }
     }
 }
