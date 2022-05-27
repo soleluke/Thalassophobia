@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Thalassophobia.Utils
 {
@@ -22,16 +23,34 @@ namespace Thalassophobia.Utils
 
         private void Start()
         {
-            SummonDrone();
+            if (NetworkServer.active)
+            {
+                foreach (CharacterMaster master in CharacterMaster.readOnlyInstancesList)
+                {
+                    if (master.name == "OverclockedDrone")
+                    {
+                        isActive = true;
+                        drone = master;
+                        drone.onBodyDestroyed += Drone_onBodyDestroyed;
+                    }
+                }
+                if (!isActive)
+                {
+                    SummonDrone();
+                }
+            }
         }
 
         private void FixedUpdate()
         {
-            this.time += Time.fixedDeltaTime;
-            if (this.time >= cooldown && !isActive)
+            if (NetworkServer.active)
             {
-                time = 0;
-                SummonDrone();
+                this.time += Time.fixedDeltaTime;
+                if (this.time >= cooldown && !isActive)
+                {
+                    time = 0;
+                    SummonDrone();
+                }
             }
         }
 
@@ -104,9 +123,10 @@ namespace Thalassophobia.Utils
                         $"Spawned with items: {s}");
                 }
                 drone.inventory.GiveItem(RoR2Content.Items.BoostHp, hp);
-                drone.inventory.GiveItem(RoR2Content.Items.BoostDamage, damage/10);
+                drone.inventory.GiveItem(RoR2Content.Items.BoostDamage, damage / 10);
                 isActive = true;
                 drone.onBodyDestroyed += Drone_onBodyDestroyed;
+                drone.name = "OverclockedDrone";
             }
         }
 
@@ -117,6 +137,7 @@ namespace Thalassophobia.Utils
 
         public void EndSummons()
         {
+            drone.DestroyBody();
             Destroy(this);
         }
     }

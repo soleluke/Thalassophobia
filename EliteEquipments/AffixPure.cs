@@ -50,7 +50,8 @@ namespace Thalassophobia.EliteEquipments
         {
             CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
             {
-                R2API.EliteAPI.VanillaFirstTierDef
+                R2API.EliteAPI.VanillaFirstTierDef,
+                R2API.EliteAPI.VanillaEliteOnlyFirstTierDef
             };
         }
 

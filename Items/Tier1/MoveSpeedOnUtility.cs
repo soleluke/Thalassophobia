@@ -81,7 +81,7 @@ namespace Thalassophobia.Items.Tier1
         private void CharacterBody_OnSkillActivated(On.RoR2.CharacterBody.orig_OnSkillActivated orig, CharacterBody self, GenericSkill skill)
         {
             orig(self, skill);
-            if (GetCount(self) >= 0)
+            if (GetCount(self) > 0)
             {
                 if (skill == self.skillLocator.utility)
                 {

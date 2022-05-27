@@ -12,9 +12,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemLangTokenName => "HEAL_MORE_ON_KILL";
 
-        public override string ItemPickupDesc => "On killing an enemy, gain a buff that gives <style=cIsHealing>7% increased healing</style> and <style=cIsUtility>5 armor</style> that can stack <style=cIsUtility>3</style> <style=cStack>(+1 per stack)</style> times.";
+        public override string ItemPickupDesc => "Get extra healing and armor on kill.";
 
-        public override string ItemFullDescription => "";
+        public override string ItemFullDescription => "On killing an enemy, gain a buff that gives <style=cIsHealing>7% increased healing</style> and <style=cIsUtility>5 armor</style> that can stack <style=cIsUtility>3</style> <style=cStack>(+1 per stack)</style> times.";
 
         public override string ItemLore => "";
 
@@ -55,6 +55,7 @@ namespace Thalassophobia.Items.Tier2
             redStoneBoost.iconSprite = Resources.Load<Sprite>("textures/bufficons/texbuffregenboosticon");
             redStoneBoost.isDebuff = false;
             redStoneBoost.canStack = true;
+            ContentAddition.AddBuffDef(redStoneBoost);
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -64,6 +65,8 @@ namespace Thalassophobia.Items.Tier2
 
         public override void Hooks()
         {
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
+
             On.RoR2.HealthComponent.Heal += (orig, self, amount, procChainMask, nonRegen) =>
             {
                 var itemCountHealKill = GetCount(self.body);
@@ -89,6 +92,16 @@ namespace Thalassophobia.Items.Tier2
                     }
                 }
             };
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            var itemCountHealKill = GetCount(sender);
+            if (itemCountHealKill > 0)
+            {
+                int stacks = sender.GetBuffCount(redStoneBoost);
+                args.armorAdd += 5 * itemCountHealKill;
+            }
         }
     }
 }

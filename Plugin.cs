@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using R2API;
+using R2API.Networking;
 using R2API.Utils;
 using RoR2;
 using System;
@@ -11,13 +12,14 @@ using UnityEngine;
 using static On.RoR2.CharacterBody;
 using static R2API.SoundAPI;
 using static RoR2.DotController;
+using static Thalassophobia.Utils.WispSummonController;
 
 namespace Thalassophobia
 {
     // Meta data and dependencies
     [BepInDependency("com.bepis.r2api")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(DamageAPI), nameof(OrbAPI), nameof(RecalculateStatsAPI), nameof(LegacyResourcesAPI))]
+    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(DamageAPI), nameof(OrbAPI), nameof(RecalculateStatsAPI), nameof(LegacyResourcesAPI), nameof(NetworkingAPI))]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class Plugin : BaseUnityPlugin
     {
@@ -50,12 +52,14 @@ namespace Thalassophobia
             eliteHelper = new EliteHelper(Config);
             eliteHelper.LoadAll();
 
+            NetworkingAPI.RegisterMessageType<SyncCheckAlive>();
+
             if (DEBUG) {
                 Hooks();
             }
 
             // Log that everything finished loading
-            Log.LogInfo(nameof(Awake) + " done.");
+            Log.LogInfo(nameof(Awake) + " Penis");
         }
 
         void Hooks() {

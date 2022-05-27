@@ -1,6 +1,8 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using RoR2.Navigation;
+using System.Collections.Generic;
 using Thalassophobia.Items.Lunar;
 using Thalassophobia.Utils;
 using UnityEngine;
@@ -49,7 +51,21 @@ namespace Thalassophobia.Items.Tier1
 
         public override void Hooks()
         {
+            On.RoR2.CharacterBody.Update += CharacterBody_Update;
             On.RoR2.CharacterMaster.OnItemAddedClient += CharacterMaster_OnItemAddedClient;
+        }
+
+        private void CharacterBody_Update(On.RoR2.CharacterBody.orig_Update orig, CharacterBody self)
+        {
+            orig(self);
+            if (GetCount(self) > 0)
+            {
+                if (!self.GetComponent<WispSummonController>())
+                {
+                    WispSummonController wispController = self.gameObject.AddComponent<WispSummonController>();
+                    wispController.owner = self.master;
+                }
+            }
         }
 
         private void CharacterMaster_OnItemAddedClient(On.RoR2.CharacterMaster.orig_OnItemAddedClient orig, CharacterMaster self, ItemIndex itemIndex)
@@ -60,13 +76,12 @@ namespace Thalassophobia.Items.Tier1
                 if (self.GetBodyObject().GetComponent<WispSummonController>())
                 {
                     WispSummonController wispController = self.GetBodyObject().GetComponent<WispSummonController>();
-                    wispController.SummonWisp("WispMaster");
+                    wispController.owner = self;
                 }
                 else
                 {
                     WispSummonController wispController = self.GetBodyObject().AddComponent<WispSummonController>();
                     wispController.owner = self;
-                    wispController.SummonWisp("WispMaster");
                 }
             }
         }

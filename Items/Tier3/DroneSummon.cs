@@ -1,6 +1,7 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using System.Collections.Generic;
 using Thalassophobia.Utils;
 using UnityEngine;
 
@@ -27,9 +28,9 @@ namespace Thalassophobia.Items.Tier3
         // Item stats
         private float cooldown;
         private int numItems;
-        private int maxDrones;
         private float damage;
-        private float megaDroneChance;
+
+        private static List<DroneSummonController> controllers = new List<DroneSummonController>();
 
 
         public override void Init(ConfigFile config)
@@ -56,26 +57,30 @@ namespace Thalassophobia.Items.Tier3
 
         public override void Hooks()
         {
-            On.RoR2.CharacterMaster.OnInventoryChanged += (orig, self) =>
+            On.RoR2.CharacterBody.Update += CharacterBody_Update;
+        }
+
+        private void CharacterBody_Update(On.RoR2.CharacterBody.orig_Update orig, CharacterBody self)
+        {
+            orig(self);
+            if (GetCount(self) > 0)
             {
-                orig(self);
-                if (GetCount(self.GetBody()) > 0)
+                if (self.GetComponent<DroneSummonController>())
                 {
-                    if (self.GetBodyObject().GetComponent<DroneSummonController>())
-                    {
-                        self.GetBodyObject().GetComponent<DroneSummonController>().summonItemCount = GetCount(self);
-                    }
-                    else
-                    {
-                        self.GetBodyObject().AddComponent<DroneSummonController>();
-                        self.GetBodyObject().GetComponent<DroneSummonController>().owner = self;
-                        self.GetBodyObject().GetComponent<DroneSummonController>().cooldown = cooldown;
-                        self.GetBodyObject().GetComponent<DroneSummonController>().damage = (int)damage;
-                        self.GetBodyObject().GetComponent<DroneSummonController>().items = numItems;
-                        self.GetBodyObject().GetComponent<DroneSummonController>().summonItemCount = GetCount(self);
-                    }
+                    self.GetComponent<DroneSummonController>().summonItemCount = GetCount(self);
                 }
-            };
+                else
+                {
+                    Log.LogInfo("test");
+                    DroneSummonController controller = self.gameObject.AddComponent<DroneSummonController>();
+                    controller.owner = self.master;
+                    controller.cooldown = cooldown;
+                    controller.damage = (int)damage;
+                    controller.items = numItems;
+                    controller.summonItemCount = GetCount(self);
+                    controllers.Add(controller);
+                }
+            }
         }
     }
 }

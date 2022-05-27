@@ -49,7 +49,21 @@ namespace Thalassophobia.Items.Tier2
 
         public override void Hooks()
         {
+            On.RoR2.CharacterBody.Update += CharacterBody_Update;
             On.RoR2.CharacterMaster.OnItemAddedClient += CharacterMaster_OnItemAddedClient;
+        }
+
+        private void CharacterBody_Update(On.RoR2.CharacterBody.orig_Update orig, CharacterBody self)
+        {
+            orig(self);
+            if (GetCount(self) > 0)
+            {
+                if (!self.GetComponent<WispSummonController>())
+                {
+                    WispSummonController wispController = self.gameObject.AddComponent<WispSummonController>();
+                    wispController.owner = self.master;
+                }
+            }
         }
 
         private void CharacterMaster_OnItemAddedClient(On.RoR2.CharacterMaster.orig_OnItemAddedClient orig, CharacterMaster self, ItemIndex itemIndex)
@@ -60,13 +74,11 @@ namespace Thalassophobia.Items.Tier2
                 if (self.GetBodyObject().GetComponent<WispSummonController>())
                 {
                     WispSummonController wispController = self.GetBodyObject().GetComponent<WispSummonController>();
-                    wispController.SummonWisp("GreaterWispMaster");
                 }
                 else
                 {
                     WispSummonController wispController = self.GetBodyObject().AddComponent<WispSummonController>();
                     wispController.owner = self;
-                    wispController.SummonWisp("GreaterWispMaster");
                 }
             }
         }
