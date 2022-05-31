@@ -25,7 +25,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/FragileMaskBrokenIcon.png");
 
         public override void Init(ConfigFile config)
         {

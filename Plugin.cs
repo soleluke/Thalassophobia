@@ -29,6 +29,10 @@ namespace Thalassophobia
         public const string GUID = "com." + AUTHOR + "." + MODNAME;
         public const string VERSION = "0.1.0";
 
+        // Asset bundle
+        public static AssetBundle assetBundle;
+        public static string[] allAssets;
+
         // String builder
         public static StringBuilder BUILDER = new StringBuilder();
 
@@ -44,6 +48,13 @@ namespace Thalassophobia
             // Logger
             Log.Init(Logger);
 
+            // Bundle
+            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Thalassophobia.myassets"))
+            {
+                assetBundle = AssetBundle.LoadFromStream(stream);
+            }
+            allAssets = assetBundle.GetAllAssetNames();
+
             // Load items
             itemHelper = new ItemHelper(Config);
             itemHelper.LoadAll();
@@ -54,15 +65,22 @@ namespace Thalassophobia
 
             NetworkingAPI.RegisterMessageType<SyncCheckAlive>();
 
-            if (DEBUG) {
+            if (DEBUG)
+            {
                 Hooks();
             }
 
             // Log that everything finished loading
             Log.LogInfo(nameof(Awake) + " Penis");
+            Log.LogInfo(allAssets.Length);
+            foreach (string s in allAssets)
+            {
+                Log.LogInfo(s);
+            }
         }
 
-        void Hooks() {
+        void Hooks()
+        {
             On.RoR2.Items.ContagiousItemManager.Init += ItemBase.RegisterVoidPairings;
             On.RoR2.ItemTierCatalog.Init += ItemBase.RegisterItemTier;
         }

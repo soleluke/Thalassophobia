@@ -22,7 +22,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/PredatoryFungusIcon.png");
 
         // Item stats
         private float time;
@@ -57,15 +57,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override void Hooks()
         {
-            On.RoR2.CharacterBody.RecalculateStats += (orig, self) =>
-            {
-                orig(self);
-                int count = self.GetBuffCount(regen);
-                if (count > 0)
-                {
-                    Reflection.SetPropertyValue<float>(self, "regen", self.regen + 0.6f * count);
-                }
-            };
+            RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
 
             On.RoR2.GlobalEventManager.OnCharacterDeath += (orig, self, damageReport) => {
                 orig(self, damageReport);
@@ -78,6 +70,16 @@ namespace Thalassophobia.Items.Tier1
                     }
                 }
             };
+        }
+
+        private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+        {
+            int count = sender.GetBuffCount(regen);
+            if (count > 0)
+            {
+                args.baseRegenAdd += 0.25f * sender.level;
+                args.regenMultAdd += 1.5f;
+            }
         }
     }
 }

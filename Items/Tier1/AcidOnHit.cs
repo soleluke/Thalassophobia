@@ -24,7 +24,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/AcidRoundsIcon.png");
 
         // Custom DoT for the acid
         public DotIndex acidDoTIndex;
@@ -56,7 +56,7 @@ namespace Thalassophobia.Items.Tier1
 
             BuffDef acidAffliction = ScriptableObject.CreateInstance<BuffDef>();
             acidAffliction.name = "Acidic Affliction";
-            acidAffliction.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffDeathMarkIcon");
+            acidAffliction.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/AcidAfflictionIcon.png");
             acidAffliction.canStack = true;
             acidAffliction.isDebuff = true;
             ContentAddition.AddBuffDef(acidAffliction);

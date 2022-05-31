@@ -155,8 +155,7 @@ namespace Thalassophobia.Utils
                         wisp.inventory.SetEquipmentIndex(EliteCatalog.eliteDefs[eliteIndex].eliteEquipmentDef.equipmentIndex);
                     }
 
-                    Log.LogInfo("test");
-
+                    wisp.onBodyDestroyed += onBodyDestroyed;
                     wisps.Add(wisp);
                 }
             }

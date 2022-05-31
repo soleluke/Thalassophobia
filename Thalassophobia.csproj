@@ -1,10 +1,10 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <AssemblyName>Thalassophobia</AssemblyName>
     <Description>My first plugin</Description>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -13,6 +13,14 @@
     <WarningLevel>5</WarningLevel>
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="myassets" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="myassets" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />

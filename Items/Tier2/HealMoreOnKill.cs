@@ -96,11 +96,11 @@ namespace Thalassophobia.Items.Tier2
 
         private void RecalculateStatsAPI_GetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
-            var itemCountHealKill = GetCount(sender);
-            if (itemCountHealKill > 0)
+            var count = GetCount(sender);
+            if (count > 0)
             {
                 int stacks = sender.GetBuffCount(redStoneBoost);
-                args.armorAdd += 5 * itemCountHealKill;
+                args.armorAdd += 5 * stacks;
             }
         }
     }

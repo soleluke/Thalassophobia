@@ -92,15 +92,34 @@ namespace Thalassophobia.Items.Tier2
         {
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
 
-            On.RoR2.CharacterBody.OnBuffFirstStackGained += CharacterBody_OnBuffFirstStackGained;
+            On.RoR2.CharacterBody.AddBuff_BuffIndex += CharacterBody_AddBuff_BuffIndex;
+
+            On.RoR2.DotController.AddDot += DotController_AddDot;
         }
 
-        private void CharacterBody_OnBuffFirstStackGained(On.RoR2.CharacterBody.orig_OnBuffFirstStackGained orig, CharacterBody self, BuffDef buffDef)
+        private void CharacterBody_AddBuff_BuffIndex(On.RoR2.CharacterBody.orig_AddBuff_BuffIndex orig, CharacterBody self, BuffIndex buffType)
         {
-            orig(self, buffDef);
-            if (GetCount(self) > 0 && buffDef.isDebuff)
+            orig(self, buffType);
+            if (GetCount(self) > 0 && BuffCatalog.GetBuffDef(buffType).isDebuff && !BuffCatalog.GetBuffDef(buffType).isHidden)
             {
                 GiveBuff(self);
+            }
+            if (Plugin.DEBUG)
+            {
+                Log.LogInfo("" + BuffCatalog.GetBuffDef(buffType).name);
+            }
+        }
+
+        private void DotController_AddDot(On.RoR2.DotController.orig_AddDot orig, DotController self, GameObject attackerObject, float duration, DotController.DotIndex dotIndex, float damageMultiplier, uint? maxStacksFromAttacker, float? totalDamage, DotController.DotIndex? preUpgradeDotIndex)
+        {
+            orig(self, attackerObject, duration, dotIndex, damageMultiplier, maxStacksFromAttacker, totalDamage, preUpgradeDotIndex);
+            if (attackerObject.GetComponent<CharacterBody>())
+            {
+                CharacterBody body = attackerObject.GetComponent<CharacterBody>();
+                if (GetCount(body) > 0)
+                {
+                    GiveBuff(body);
+                }
             }
         }
 

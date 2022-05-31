@@ -49,17 +49,17 @@ namespace Thalassophobia.Items.Tier2
 
         public override void Hooks()
         {
-            //On.RoR2.DotController.AddDot += DotController_AddDot;
+            On.RoR2.DotController.AddDot += DotController_AddDot;
         }
 
-        private void DotController_AddDot(On.RoR2.DotController.orig_AddDot orig, DotController self, GameObject attackerObject, float duration, DotController.DotIndex dotIndex, float damageMultiplier, uint? maxStacksFromAttacker, float? totalDamage)
+        private void DotController_AddDot(On.RoR2.DotController.orig_AddDot orig, DotController self, GameObject attackerObject, float duration, DotController.DotIndex dotIndex, float damageMultiplier, uint? maxStacksFromAttacker, float? totalDamage, DotController.DotIndex? preUpgradeDotIndex)
         {
             var itemCount = GetCount(attackerObject.GetComponent<CharacterBody>());
             if (itemCount > 0)
             {
                 damageMultiplier *= 1 + (damageUp * itemCount);
             }
-            orig(self, attackerObject, duration, dotIndex, damageMultiplier, maxStacksFromAttacker, totalDamage);
+            orig(self, attackerObject, duration, dotIndex, damageMultiplier, maxStacksFromAttacker, totalDamage, preUpgradeDotIndex);
         }
     }
 }
