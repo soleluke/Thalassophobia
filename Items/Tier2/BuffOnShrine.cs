@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override ItemTier Tier => ItemTier.Tier2;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/PaperModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/PaperIcon.png");
 
 
         BuffDef shownBuff;
@@ -45,7 +45,7 @@ namespace Thalassophobia.Items.Tier2
 
             shownBuff = ScriptableObject.CreateInstance<BuffDef>();
             shownBuff.name = "Musuem Brochure Buff";
-            shownBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            shownBuff.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("PaperBuffIcon.png");
             shownBuff.canStack = true;
             shownBuff.isDebuff = false;
             ContentAddition.AddBuffDef(shownBuff);
@@ -59,7 +59,7 @@ namespace Thalassophobia.Items.Tier2
             ContentAddition.AddBuffDef(armorBuff);
 
             attackSpeedBuff = ScriptableObject.CreateInstance<BuffDef>();
-            attackSpeedBuff.name = "Analytical Attack Speed";
+            attackSpeedBuff.name = "Attack Speed";
             attackSpeedBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
             attackSpeedBuff.canStack = true;
             attackSpeedBuff.isDebuff = false;
@@ -67,7 +67,7 @@ namespace Thalassophobia.Items.Tier2
             ContentAddition.AddBuffDef(attackSpeedBuff);
 
             critBuff = ScriptableObject.CreateInstance<BuffDef>();
-            critBuff.name = "Analytical Critical Strikes";
+            critBuff.name = "Critical Strikes";
             critBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
             critBuff.canStack = true;
             critBuff.isDebuff = false;
@@ -75,7 +75,7 @@ namespace Thalassophobia.Items.Tier2
             ContentAddition.AddBuffDef(critBuff);
 
             regenBuff = ScriptableObject.CreateInstance<BuffDef>();
-            regenBuff.name = "Analytical Regeneration";
+            regenBuff.name = "Regeneration";
             regenBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
             regenBuff.canStack = true;
             regenBuff.isDebuff = false;

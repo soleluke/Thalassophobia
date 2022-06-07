@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("PFunfusModel.prefab");
 
-        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/PredatoryFungusIcon.png");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("PredatoryFungusIcon.png");
 
         // Item stats
         private float time;
@@ -47,7 +47,14 @@ namespace Thalassophobia.Items.Tier1
             regen.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
             regen.canStack = true;
             regen.isDebuff = false;
+            regen.isHidden = true;
             ContentAddition.AddBuffDef(regen);
+
+            bool check = TempVisualEffectAPI.AddTemporaryVisualEffect(Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Effects/RegenEmitter.prefab"), condition => {
+                return condition.HasBuff(regen);
+            }, true);
+
+            Log.LogInfo("Temp effect check: " + check);
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

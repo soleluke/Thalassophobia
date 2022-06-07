@@ -1,30 +1,136 @@
 ManifestFileVersion: 0
-CRC: 2857294828
+CRC: 2856957862
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 87b3db58c26c276776af1c22c56d330b
+    Hash: fd41096785fa851e79544260dbc31ba3
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c90fc19e2679e5295d10bd00f33cb4c3
+    Hash: ba5a9b24d2339c33498884b5bb559ea4
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 816898038, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -335047464, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 511512695, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1561644061, guid: 951ce57ad9993c1f840a4dceb5f8b763, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
+- Class: 212
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Assembly/MyAssets/Icons/ControlUnitIcon.png
+- Assets/Assembly/MyAssets/Icons/VoidDice.png
 - Assets/Assembly/MyAssets/Icons/FragileMaskBrokenIcon.png
+- Assets/Assembly/MyAssets/Icons/EliteKillCritUpIcon.png
+- Assets/Assembly/MyAssets/Models/ResonatorModel.prefab
+- Assets/Assembly/MyAssets/Icons/LunarDice.png
+- Assets/Assembly/MyAssets/Models/ScaleModel.prefab
+- Assets/Assembly/MyAssets/Models/MemoryChipModel.prefab
+- Assets/Assembly/MyAssets/Models/BudModel.prefab
+- Assets/Assembly/MyAssets/Icons/SeperatorIcon.png
+- Assets/Assembly/MyAssets/Models/PaperModel.prefab
+- Assets/Assembly/MyAssets/Icons/GMaskIcon.png
+- Assets/Assembly/MyAssets/Icons/BudIcon.png
+- Assets/Assembly/MyAssets/Icons/CMaskIcon.png
+- Assets/Assembly/MyAssets/Icons/ScaleBuffMovementSpeed.png
+- Assets/Assembly/MyAssets/Icons/MemoryChipIcon.png
+- Assets/Assembly/MyAssets/Models/DiceModel.prefab
+- Assets/Assembly/MyAssets/Models/TransistorModel.prefab
+- Assets/Assembly/MyAssets/Icons/HuntersMarkIcon.png
+- Assets/Assembly/MyAssets/Models/PFunfusModel.prefab
+- Assets/Assembly/MyAssets/Icons/ScaleBuffAttackSpeed.png
 - Assets/Assembly/MyAssets/Icons/AcidRoundsIcon.png
 - Assets/Assembly/MyAssets/Icons/betterSlow60Icon.png
 - Assets/Assembly/MyAssets/Icons/PredatoryFungusIcon.png
 - Assets/Assembly/MyAssets/Icons/ARVisorIcon.png
+- Assets/Assembly/MyAssets/Models/RepeaterModel.prefab
+- Assets/Assembly/MyAssets/Models/CanModel.prefab
+- Assets/Assembly/MyAssets/Models/CompoundModel.prefab
+- Assets/Assembly/MyAssets/Models/HuntersMarkModel.prefab
+- Assets/Assembly/MyAssets/Models/BotModel.prefab
+- Assets/Assembly/MyAssets/Icons/ImplantIcon.png
+- Assets/Assembly/MyAssets/Icons/NullifyingBuffIcon.png
+- Assets/Assembly/MyAssets/Models/VisorModel.prefab
+- Assets/Assembly/MyAssets/Models/StoneModel.prefab
+- Assets/Assembly/MyAssets/Effects/Overlays/AffixPureOverlay.mat
+- Assets/Assembly/MyAssets/Icons/ScaleBuffDamage.png
+- Assets/Assembly/MyAssets/Models/ImplantModel.prefab
 - Assets/Assembly/MyAssets/Icons/betterSlow50Icon.png
+- Assets/Assembly/MyAssets/Icons/InverterIcon.png
 - Assets/Assembly/MyAssets/Icons/AcidAfflictionIcon.png
+- Assets/Assembly/MyAssets/Models/SteroidsModel.prefab
+- Assets/Assembly/MyAssets/Icons/BrokenCandleIcon.png
+- Assets/Assembly/MyAssets/Icons/PaperIcon.png
+- Assets/Assembly/MyAssets/Icons/PaperBuffIcon.png
+- Assets/Assembly/MyAssets/Models/AcidRoundModel.prefab
+- Assets/Assembly/MyAssets/Effects/DiceEffect.prefab
+- Assets/Assembly/MyAssets/Icons/SteroidsIcon.png
+- Assets/Assembly/MyAssets/Icons/VoidCanIcon.png
+- Assets/Assembly/MyAssets/Icons/ResonatorIcon.png
+- Assets/Assembly/MyAssets/Icons/bootsBoost.png
+- Assets/Assembly/MyAssets/Models/SapModel.prefab
+- Assets/Assembly/MyAssets/Icons/ScaleBuffRegen.png
+- Assets/Assembly/MyAssets/Models/PotionModel.prefab
+- Assets/Assembly/MyAssets/Models/FMaskModel.prefab
+- Assets/Assembly/MyAssets/Icons/VoidFogIcon.png
+- Assets/Assembly/MyAssets/Icons/CompoundIcon.png
+- Assets/Assembly/MyAssets/Icons/VoidBudIcon.png
+- Assets/Assembly/MyAssets/Models/CrackedOrbModel.prefab
+- Assets/Assembly/MyAssets/Icons/BotsIcon.png
 - Assets/Assembly/MyAssets/Icons/SnowglobeIcon.png
+- Assets/Assembly/MyAssets/Models/HardShieldModel.prefab
 - Assets/Assembly/MyAssets/Icons/BoosterBootsIcon.png
+- Assets/Assembly/MyAssets/Effects/PureEffect.prefab
+- Assets/Assembly/MyAssets/Icons/GMaskBrokenIcon.png
+- Assets/Assembly/MyAssets/Icons/ScaleIcon.png
 - Assets/Assembly/MyAssets/Icons/betterSlow80Icon.png
+- Assets/Assembly/MyAssets/Effects/NullEffect.prefab
+- Assets/Assembly/MyAssets/Icons/ClockIcon.png
+- Assets/Assembly/MyAssets/Icons/ScaleBuffCrit.png
+- Assets/Assembly/MyAssets/Icons/CrackedOrbIcon.png
+- Assets/Assembly/MyAssets/Icons/ScorchedIcon.png
+- Assets/Assembly/MyAssets/Icons/PotionIcon.png
+- Assets/Assembly/MyAssets/Icons/HardShieldsIcon.png
+- Assets/Assembly/MyAssets/Icons/DiveIcon.png
+- Assets/Assembly/MyAssets/Models/InverterModel.prefab
 - Assets/Assembly/MyAssets/Icons/FragileMaskIcon.png
 - Assets/Assembly/MyAssets/Icons/MilitaryTrainingIcon.png
+- Assets/Assembly/MyAssets/Models/ClockModel.prefab
+- Assets/Assembly/MyAssets/Models/DiveModel.prefab
+- Assets/Assembly/MyAssets/Models/CandleModel.prefab
+- Assets/Assembly/MyAssets/Icons/RedStoneIcon.png
+- Assets/Assembly/MyAssets/Icons/CMaskBrokenIcon.png
+- Assets/Assembly/MyAssets/Icons/LunarDiceIcon.png
+- Assets/Assembly/MyAssets/Models/ControlUnitModel.prefab
+- Assets/Assembly/MyAssets/Models/MilTrainingModel.prefab
+- Assets/Assembly/MyAssets/Icons/RepeaterIcon.png
+- Assets/Assembly/MyAssets/Icons/TransistorIcon.png
+- Assets/Assembly/MyAssets/Effects/RegenEmitter.prefab
+- Assets/Assembly/MyAssets/Models/SnowglobeModel.prefab
+- Assets/Assembly/MyAssets/Icons/RedStoneBuffIcon.png
+- Assets/Assembly/MyAssets/Models/BootsModels.prefab
+- Assets/Assembly/MyAssets/Models/CMaskModel.prefab
+- Assets/Assembly/MyAssets/Models/GMaskModel.prefab
+- Assets/Assembly/MyAssets/Icons/SapIcon.png
 Dependencies: []

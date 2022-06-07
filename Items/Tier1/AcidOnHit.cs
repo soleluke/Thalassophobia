@@ -22,9 +22,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("AcidRoundModel.prefab");
 
-        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/AcidRoundsIcon.png");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("AcidRoundsIcon.png");
 
         // Custom DoT for the acid
         public DotIndex acidDoTIndex;
@@ -56,7 +56,7 @@ namespace Thalassophobia.Items.Tier1
 
             BuffDef acidAffliction = ScriptableObject.CreateInstance<BuffDef>();
             acidAffliction.name = "Acidic Affliction";
-            acidAffliction.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/AcidAfflictionIcon.png");
+            acidAffliction.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("AcidAfflictionIcon.png");
             acidAffliction.canStack = true;
             acidAffliction.isDebuff = true;
             ContentAddition.AddBuffDef(acidAffliction);

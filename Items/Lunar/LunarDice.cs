@@ -27,15 +27,17 @@ namespace Thalassophobia.Items.Lunar
 
         public override ItemTier Tier => ItemTier.Lunar;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/DiceModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/LunarDiceIcon.png");
 
         private float missChance;
         private int rolls;
         private ConfigFile config;
 
         private BuffDef diceTimer;
+
+        private GameObject effect;
 
         public delegate void DiceReroll(global::RoR2.DamageInfo damageInfo, GameObject victim);
         public static DiceReroll hook_DiceReroll;
@@ -58,10 +60,13 @@ namespace Thalassophobia.Items.Lunar
 
             diceTimer = ScriptableObject.CreateInstance<BuffDef>();
             diceTimer.name = "Reroll";
-            diceTimer.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            diceTimer.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("LunarDice.png");
             diceTimer.canStack = true;
             diceTimer.isDebuff = true;
             ContentAddition.AddBuffDef(diceTimer);
+
+            effect = Plugin.assetBundle.LoadAsset<GameObject>("DiceEffect.prefab");
+            ContentAddition.AddEffect(effect);
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -79,7 +84,7 @@ namespace Thalassophobia.Items.Lunar
                     float rerollCount = rolls * GetCount(damageInfo.attacker.GetComponent<CharacterBody>());
                     for (int i = 0; i < rerollCount; i++)
                     {
-                        if (Util.CheckRoll(missChance, 0f, null))
+                        if (Util.CheckRoll(missChance, 0f, damageInfo.attacker.GetComponent<CharacterBody>().master))
                         {
                             EffectData effectData = new EffectData
                             {
@@ -137,6 +142,12 @@ namespace Thalassophobia.Items.Lunar
                         VanillaProc(damageInfo, self.gameObject, builder);
                         hook_DiceReroll(damageInfo, self.gameObject);
                         DecreaseProcCoefficient(damageInfo, stack.currentRoll, stack.maxRolls);
+                        EffectData effectData = new EffectData
+                        {
+                            origin = self.transform.position,
+                            rotation = Util.QuaternionSafeLookRotation((damageInfo.force != Vector3.zero) ? damageInfo.force : UnityEngine.Random.onUnitSphere)
+                        };
+                        EffectManager.SpawnEffect(effect, effectData, true);
 
                         if (Plugin.DEBUG)
                         {

@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override ItemTier Tier => ItemTier.Tier2;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("SapModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("SapIcon.png");
 
         static BuffDef critUp;
 
@@ -40,7 +40,7 @@ namespace Thalassophobia.Items.Tier2
 
             critUp = ScriptableObject.CreateInstance<BuffDef>();
             critUp.name = "Elite Kill Critical Strike";
-            critUp.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            critUp.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("EliteKillCritUpIcon.png");
             critUp.canStack = true;
             critUp.isDebuff = false;
             critUp.isCooldown = false;

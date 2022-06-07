@@ -211,6 +211,7 @@ namespace Thalassophobia.Utils
             switch (obj.baseNameToken)
             {
                 case "WISP_BODY_NAME":
+                    Log.LogInfo("Destroy lesser wisp");
                     owner.inventory.RemoveItem(tier1Def);
                     owner.inventory.GiveItem(tier1BrokenDef);
                     wisps.Remove(obj.master);
@@ -221,6 +222,7 @@ namespace Thalassophobia.Utils
                     EffectManager.SpawnEffect(HealthComponent.AssetReferences.fragileDamageBonusBreakEffectPrefab, effect, true);
                     break;
                 case "GREATERWISP_BODY_NAME":
+                    Log.LogInfo("Destroy greater wisp");
                     owner.inventory.RemoveItem(tier2Def);
                     owner.inventory.GiveItem(tier2BrokenDef);
                     wisps.Remove(obj.master);

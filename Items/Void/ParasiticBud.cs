@@ -12,15 +12,15 @@ using static RoR2.DotController;
 
 namespace Thalassophobia.Items.Void
 {
-    class VoidHealingSeed : ItemBase<VoidHealingSeed>
+    class ParasiticBud : ItemBase<ParasiticBud>
     {
         public override string ItemName => "Parasitic Bud";
 
         public override string ItemLangTokenName => "VOID_HEALING_SEED";
 
-        public override string ItemPickupDesc => "Corrupts all Leeching Seeds. Hitting an enemy leeches that enemy.";
+        public override string ItemPickupDesc => "<style=cIsVoid>Corrupts all Leeching Seeds.</style> Hitting an enemy leeches that enemy.";
 
-        public override string ItemFullDescription => "Corrupts all Leeching Seeds. Hitting an enemy leeches that enemy. Leeched enemies heal you for 1 (+1 per stack) HP repeatedly for 5 seconds. Only 1 stack of leech can be applied to an enemy.";
+        public override string ItemFullDescription => "Hitting an enemy leeches that enemy. Leeched enemies heal you for <style=cIsHealing>1 HP</style> <style=cStack>(+1 HP per stack)</style> repeatedly for 5 seconds. Only 1 stack of leech can be applied to an enemy. <style=cIsVoid>Corrupts all Leeching Seeds.</style>";
 
         public override string ItemLore => "";
 
@@ -28,9 +28,9 @@ namespace Thalassophobia.Items.Void
 
         public override String CorruptsItem => RoR2Content.Items.Seed.nameToken;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/BudModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/VoidBudIcon.png");
 
         // Buff
         public BuffDef voidLeech;
@@ -59,7 +59,7 @@ namespace Thalassophobia.Items.Void
 
             voidLeech = ScriptableObject.CreateInstance<BuffDef>();
             voidLeech.name = "Inhabited";
-            voidLeech.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffDeathMarkIcon");
+            voidLeech.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("BudIcon.png");
             voidLeech.canStack = false;
             voidLeech.isDebuff = true;
             ContentAddition.AddBuffDef(voidLeech);

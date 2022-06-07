@@ -20,7 +20,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/VisorModel.prefab");
 
         public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/ARVisorIcon.png");
 

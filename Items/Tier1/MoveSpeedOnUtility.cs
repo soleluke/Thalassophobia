@@ -22,7 +22,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/BootsModels.prefab");
 
         public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/BoosterBootsIcon.png");
 
@@ -52,7 +52,7 @@ namespace Thalassophobia.Items.Tier1
 
             speedUp = ScriptableObject.CreateInstance<BuffDef>();
             speedUp.name = "Booster Boots";
-            speedUp.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            speedUp.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/bootsBoost.png");
             speedUp.canStack = false;
             speedUp.isDebuff = false;
             ContentAddition.AddBuffDef(speedUp);

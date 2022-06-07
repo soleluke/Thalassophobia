@@ -10,13 +10,15 @@ using BepInEx.Configuration;
 
 namespace Thalassophobia.EliteEquipments
 {
+    // This is the base from Aetherium
+    // Should probably stop copy pasting this stuff but eh
     public abstract class EliteEquipmentBase<T> : EliteEquipmentBase where T : EliteEquipmentBase<T>
     {
         public static T instance { get; private set; }
 
         public EliteEquipmentBase()
         {
-            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EliteEquipmentBase was instantiated twice");
+            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EquipmentBoilerplate/Equipment was instantiated twice");
             instance = this as T;
         }
     }
@@ -24,20 +26,10 @@ namespace Thalassophobia.EliteEquipments
     public abstract class EliteEquipmentBase
     {
         public abstract string EliteEquipmentName { get; }
-
-        /// <summary>
-        /// The lang token that will be used in registering most of your strings.
-        /// <para>E.g.: AFFIX_HYPERCHARGED</para>
-        /// </summary>
         public abstract string EliteAffixToken { get; }
         public abstract string EliteEquipmentPickupDesc { get; }
         public abstract string EliteEquipmentFullDescription { get; }
         public abstract string EliteEquipmentLore { get; }
-
-        /// <summary>
-        /// This is what appears before the name of the creature that has this elite status.
-        /// <para>E.g.: "Hypercharged Beetle" where Hypercharged is the modifier.</para>
-        /// </summary>
         public abstract string EliteModifier { get; }
 
         public virtual bool AppearsInSinglePlayer { get; } = true;
@@ -59,51 +51,41 @@ namespace Thalassophobia.EliteEquipments
 
         public EquipmentDef EliteEquipmentDef;
 
-        public BuffDef EliteBuffDef;
-
         /// <summary>
         /// Implement before calling CreateEliteEquipment.
         /// </summary>
+        public BuffDef EliteBuffDef;
+
         public abstract Sprite EliteBuffIcon { get; }
 
-        public virtual Color32 EliteColor { get; } = new Color32(255, 255, 255, byte.MaxValue);
-
-        public virtual int EliteRampIndex { get; } = -1;
+        public virtual Color EliteBuffColor { get; set; } = new Color32(255, 255, 255, byte.MaxValue);
 
         /// <summary>
         /// If not overriden, the elite can spawn in all tiers defined.
         /// </summary>
         public virtual EliteTierDef[] CanAppearInEliteTiers { get; set; } = EliteAPI.GetCombatDirectorEliteTiers();
 
-        /// <summary>
-        /// If you want the elite to have an overlay with your custom material.
-        /// </summary>
         public virtual Material EliteMaterial { get; set; } = null;
 
         public EliteDef EliteDef;
 
-        /// <summary>
-        /// This method structures your code execution of this class. An example implementation inside of it would be:
-        /// <para>CreateConfig(config);</para>
-        /// <para>CreateLang();</para>
-        /// <para>CreateBuff();</para>
-        /// <para>CreateEquipment();</para>
-        /// <para>CreateElite();</para>
-        /// <para>Hooks();</para>
-        /// <para>This ensures that these execute in this order, one after another, and is useful for having things available to be used in later methods.</para>
-        /// <para>P.S. CreateItemDisplayRules(); does not have to be called in this, as it already gets called in CreateEquipment();</para>
-        /// </summary>
-        /// <param name="config">The config file that will be passed into this from the main class.</param>
+        public virtual float HealthMultiplier { get; set; } = 1;
+
+        public virtual float DamageMultiplier { get; set; } = 1;
+
+        public virtual float CostMultiplierOfElite { get; set; } = 1;
+
         public abstract void Init(ConfigFile config);
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
 
         protected void CreateLang()
         {
-            LanguageAPI.Add("ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME", EliteEquipmentName);
-            LanguageAPI.Add("ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP", EliteEquipmentName);
-            LanguageAPI.Add("ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION", EliteEquipmentName);
-            LanguageAPI.Add("ELITE_" + EliteAffixToken + "_MODIFIER", EliteModifier + " {0}");
+            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME", EliteEquipmentName);
+            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP", EliteEquipmentPickupDesc);
+            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION", EliteEquipmentFullDescription);
+            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_LORE", EliteEquipmentLore);
+            LanguageAPI.Add("AETHERIUM_ELITE_" + EliteAffixToken + "_MODIFIER", EliteModifier + " {0}");
 
         }
 
@@ -111,15 +93,17 @@ namespace Thalassophobia.EliteEquipments
         {
             EliteBuffDef = ScriptableObject.CreateInstance<BuffDef>();
             EliteBuffDef.name = EliteAffixToken;
-            EliteBuffDef.buffColor = new Color32(255, 255, 255, byte.MaxValue);
-            EliteBuffDef.iconSprite = EliteBuffIcon;
+            EliteBuffDef.isDebuff = false;
+            EliteBuffDef.buffColor = EliteBuffColor;
             EliteBuffDef.canStack = false;
+            EliteBuffDef.iconSprite = EliteBuffIcon;
 
             EliteEquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
-            EliteEquipmentDef.name = "ELITE_EQUIPMENT_" + EliteAffixToken;
-            EliteEquipmentDef.nameToken = "ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME";
-            EliteEquipmentDef.pickupToken = "ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP";
-            EliteEquipmentDef.descriptionToken = "ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION";
+            EliteEquipmentDef.name = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken;
+            EliteEquipmentDef.nameToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME";
+            EliteEquipmentDef.pickupToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP";
+            EliteEquipmentDef.descriptionToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION";
+            EliteEquipmentDef.loreToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_LORE";
             EliteEquipmentDef.pickupModelPrefab = EliteEquipmentModel;
             EliteEquipmentDef.pickupIconSprite = EliteEquipmentIcon;
             EliteEquipmentDef.appearsInSinglePlayer = AppearsInSinglePlayer;
@@ -144,43 +128,23 @@ namespace Thalassophobia.EliteEquipments
             {
                 On.RoR2.CharacterBody.FixedUpdate += OverlayManager;
             }
-
         }
 
         private void OverlayManager(On.RoR2.CharacterBody.orig_FixedUpdate orig, CharacterBody self)
         {
-            if (self.modelLocator && self.modelLocator.modelTransform && self.HasBuff(EliteBuffDef))
+            if (self.modelLocator && self.modelLocator.modelTransform && self.HasBuff(EliteBuffDef) && !self.GetComponent<EliteOverlayManager>())
             {
-                var eliteOverlayManagers = self.gameObject.GetComponents<EliteOverlayManager>();
-                EliteOverlayManager eliteOverlayManager = null;
-                if (!eliteOverlayManagers.Any())
-                {
-                    eliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>();
-                }
-                else
-                {
-                    foreach (EliteOverlayManager overlayManager in eliteOverlayManagers)
-                    {
-                        if (overlayManager.EliteBuffDef == EliteBuffDef)
-                        {
-                            orig(self);
-                            return;
-                        }
-                    }
-                    RoR2.TemporaryOverlay overlay = self.modelLocator.modelTransform.gameObject.AddComponent<RoR2.TemporaryOverlay>();
-                    overlay.duration = float.PositiveInfinity;
-                    overlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
-                    overlay.animateShaderAlpha = true;
-                    overlay.destroyComponentOnEnd = true;
-                    overlay.originalMaterial = EliteMaterial;
-                    overlay.AddToCharacerModel(self.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>());
-
-                    if (!eliteOverlayManager) { eliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>(); }
-                    eliteOverlayManager.Overlay = overlay;
-                    eliteOverlayManager.Body = self;
-                    eliteOverlayManager.EliteBuffDef = EliteBuffDef;
-
-                }
+                RoR2.TemporaryOverlay overlay = self.modelLocator.modelTransform.gameObject.AddComponent<RoR2.TemporaryOverlay>();
+                overlay.duration = float.PositiveInfinity;
+                overlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+                overlay.animateShaderAlpha = true;
+                overlay.destroyComponentOnEnd = true;
+                overlay.originalMaterial = EliteMaterial;
+                overlay.AddToCharacerModel(self.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>());
+                var EliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>();
+                EliteOverlayManager.Overlay = overlay;
+                EliteOverlayManager.Body = self;
+                EliteOverlayManager.EliteBuffDef = EliteBuffDef;
             }
             orig(self);
         }
@@ -193,7 +157,7 @@ namespace Thalassophobia.EliteEquipments
 
             public void FixedUpdate()
             {
-                if (Body && EliteBuffDef && !Body.HasBuff(EliteBuffDef))
+                if (!Body.HasBuff(EliteBuffDef))
                 {
                     UnityEngine.Object.Destroy(Overlay);
                     UnityEngine.Object.Destroy(this);
@@ -204,11 +168,11 @@ namespace Thalassophobia.EliteEquipments
         protected void CreateElite()
         {
             EliteDef = ScriptableObject.CreateInstance<EliteDef>();
-            EliteDef.name = "ELITE_" + EliteAffixToken;
-            EliteDef.modifierToken = "ELITE_" + EliteAffixToken + "_MODIFIER";
+            EliteDef.name = "AETHERIUM_ELITE_" + EliteAffixToken;
+            EliteDef.modifierToken = "AETHERIUM_ELITE_" + EliteAffixToken + "_MODIFIER";
             EliteDef.eliteEquipmentDef = EliteEquipmentDef;
-            EliteDef.color = EliteColor;
-            EliteDef.shaderEliteRampIndex = EliteRampIndex;
+            EliteDef.healthBoostCoefficient = HealthMultiplier;
+            EliteDef.damageBoostCoefficient = DamageMultiplier;
 
             var baseEliteTierDefs = EliteAPI.GetCombatDirectorEliteTiers();
             if (!CanAppearInEliteTiers.All(x => baseEliteTierDefs.Contains(x)))
@@ -250,11 +214,6 @@ namespace Thalassophobia.EliteEquipments
             }
         }
 
-        /// <summary>
-        /// Must be implemented, but you can just return false if you don't want an On Use effect for your elite equipment.
-        /// </summary>
-        /// <param name="slot"></param>
-        /// <returns></returns>
         protected abstract bool ActivateEquipment(EquipmentSlot slot);
 
         public abstract void Hooks();

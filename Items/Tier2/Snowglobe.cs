@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Thalassophobia.Items.Tier2
 {
-    public class BetterSlow : ItemBase<BetterSlow>
+    public class Snowglobe : ItemBase<Snowglobe>
     {
         public override string ItemName => "Snowglobe";
 
-        public override string ItemLangTokenName => "BETTER_SLOW";
+        public override string ItemLangTokenName => "SNOWGLOBE";
 
         public override string ItemPickupDesc => "Slowing an enemy decreases their attack speed.";
 
@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override ItemTier Tier => ItemTier.Tier2;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("SnowglobeModel.prefab");
 
-        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/SnowglobeIcon.png");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("SnowglobeIcon.png");
 
         BuffDef betterSlow50;
         BuffDef betterSlow60;
@@ -93,6 +93,35 @@ namespace Thalassophobia.Items.Tier2
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPI_GetStatCoefficients;
 
             On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManager_OnHitEnemy;
+
+            On.RoR2.CharacterBody.FixedUpdate += OverlayManager;
+        }
+
+        private void OverlayManager(On.RoR2.CharacterBody.orig_FixedUpdate orig, CharacterBody self)
+        {
+            if (self.modelLocator && self.modelLocator.modelTransform)
+            {
+                bool add = true;
+                foreach (Material mat in self.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().currentOverlays) 
+                {
+                    if (mat == Plugin.assetBundle.LoadAsset<Material>("BetterSlowOverlay.mat")) {
+                        add = false;
+                    } 
+                }
+                if (add && self.HasBuff(betterSlow50) || self.HasBuff(betterSlow60) || self.HasBuff(betterSlow80))
+                {
+                    //var Meshes = Voidheart.ItemBodyModelPrefab.GetComponentsInChildren<MeshRenderer>();
+                    float time = 0.1f;
+                    RoR2.TemporaryOverlay overlay = self.modelLocator.modelTransform.gameObject.AddComponent<RoR2.TemporaryOverlay>();
+                    overlay.duration = time;
+                    overlay.alphaCurve = AnimationCurve.EaseInOut(0f, 1f, 1f, 0f);
+                    overlay.animateShaderAlpha = true;
+                    overlay.destroyComponentOnEnd = true;
+                    overlay.originalMaterial = Plugin.assetBundle.LoadAsset<Material>("BetterSlowOverlay.mat");
+                    overlay.AddToCharacerModel(self.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>());
+                }
+            }
+            orig(self);
         }
 
         private void GlobalEventManager_OnHitEnemy(On.RoR2.GlobalEventManager.orig_OnHitEnemy orig, GlobalEventManager self, DamageInfo damageInfo, GameObject victim)
@@ -103,11 +132,11 @@ namespace Thalassophobia.Items.Tier2
                 CharacterBody attacker = damageInfo.attacker.GetComponent<CharacterBody>();
                 if (GetCount(attacker) > 0)
                 {
-                    Log.LogInfo("test");
+                    //Log.LogInfo("test");
                     CharacterBody victimBody = victim.GetComponent<CharacterBody>();
                     if (victimBody.HasBuff(BuffCatalog.FindBuffIndex("bdSlow50")))
                     {
-                        Log.LogInfo("test50");
+                        //Log.LogInfo("test50");
                         float remainingTime = 0f;
                         foreach (CharacterBody.TimedBuff t in victimBody.timedBuffs)
                         {
@@ -122,7 +151,7 @@ namespace Thalassophobia.Items.Tier2
 
                     if (victimBody.HasBuff(BuffCatalog.FindBuffIndex("bdSlow60")))
                     {
-                        Log.LogInfo("test60");
+                        //Log.LogInfo("test60");
                         float remainingTime = 0f;
                         foreach (CharacterBody.TimedBuff t in victimBody.timedBuffs)
                         {
@@ -137,7 +166,7 @@ namespace Thalassophobia.Items.Tier2
 
                     if (victimBody.HasBuff(BuffCatalog.FindBuffIndex("bdSlow80")))
                     {
-                        Log.LogInfo("test80");
+                        //Log.LogInfo("test80");
                         float remainingTime = 0f;
                         foreach (CharacterBody.TimedBuff t in victimBody.timedBuffs)
                         {

@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override ItemTier Tier => ItemTier.Tier2;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("ScaleModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("ScaleIcon.png");
 
         // Item stats
         private float time;
@@ -49,35 +49,35 @@ namespace Thalassophobia.Items.Tier2
 
             damageBuff = ScriptableObject.CreateInstance<BuffDef>();
             damageBuff.name = "Analytical Damage";
-            damageBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            damageBuff.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("ScaleBuffDamage.png");
             damageBuff.canStack = false;
             damageBuff.isDebuff = false;
             ContentAddition.AddBuffDef(damageBuff);
 
             attackSpeedBuff = ScriptableObject.CreateInstance<BuffDef>();
             attackSpeedBuff.name = "Analytical Attack Speed";
-            attackSpeedBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            attackSpeedBuff.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("ScaleBuffAttackSpeed.png");
             attackSpeedBuff.canStack = false;
             attackSpeedBuff.isDebuff = false;
             ContentAddition.AddBuffDef(attackSpeedBuff);
 
             critBuff = ScriptableObject.CreateInstance<BuffDef>();
             critBuff.name = "Analytical Critical Strikes";
-            critBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            critBuff.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("ScaleBuffCrit.png");
             critBuff.canStack = false;
             critBuff.isDebuff = false;
             ContentAddition.AddBuffDef(critBuff);
 
             movementBuff = ScriptableObject.CreateInstance<BuffDef>();
             movementBuff.name = "Analytical Speed";
-            movementBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            movementBuff.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("ScaleBuffMovementSpeed.png");
             movementBuff.canStack = false;
             movementBuff.isDebuff = false;
             ContentAddition.AddBuffDef(movementBuff);
 
             regenBuff = ScriptableObject.CreateInstance<BuffDef>();
             regenBuff.name = "Analytical Regeneration";
-            regenBuff.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            regenBuff.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("ScaleBuffRegen.png");
             regenBuff.canStack = false;
             regenBuff.isDebuff = false;
             ContentAddition.AddBuffDef(regenBuff);
@@ -104,21 +104,16 @@ namespace Thalassophobia.Items.Tier2
             {
                 GiveBuff(self);
             }
-            if (Plugin.DEBUG)
-            {
-                Log.LogInfo("" + BuffCatalog.GetBuffDef(buffType).name);
-            }
         }
 
         private void DotController_AddDot(On.RoR2.DotController.orig_AddDot orig, DotController self, GameObject attackerObject, float duration, DotController.DotIndex dotIndex, float damageMultiplier, uint? maxStacksFromAttacker, float? totalDamage, DotController.DotIndex? preUpgradeDotIndex)
         {
             orig(self, attackerObject, duration, dotIndex, damageMultiplier, maxStacksFromAttacker, totalDamage, preUpgradeDotIndex);
-            if (attackerObject.GetComponent<CharacterBody>())
+            if (self.victimBody)
             {
-                CharacterBody body = attackerObject.GetComponent<CharacterBody>();
-                if (GetCount(body) > 0)
+                if (GetCount(self.victimBody) > 0)
                 {
-                    GiveBuff(body);
+                    GiveBuff(self.victimBody);
                 }
             }
         }

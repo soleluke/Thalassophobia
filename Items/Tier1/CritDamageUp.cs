@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("MilTrainingModel.prefab");
 
-        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/MilitaryTrainingIcon.png");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("MilitaryTrainingIcon.png");
 
         // Item stats
         private float damageUp;

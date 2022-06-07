@@ -26,11 +26,16 @@ namespace Thalassophobia.EliteEquipments
 
         public override Sprite EliteEquipmentIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
-        public override Sprite EliteBuffIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite EliteBuffIcon => Plugin.assetBundle.LoadAsset<Sprite>("NullifyingBuffIcon.png");
 
-        public override Color32 EliteColor => new Color32(50, 50, 50, 255);
+        public override float HealthMultiplier => 4f;
 
-        public override int EliteRampIndex => 2;
+        public override float DamageMultiplier => 2f;
+
+        public override float CostMultiplierOfElite => 1f;
+
+        private GameObject purifiedEffect;
+        private GameObject nullifiedEffect;
 
         public override void Init(ConfigFile config)
         {
@@ -44,14 +49,25 @@ namespace Thalassophobia.EliteEquipments
 
         private void CreateConfig(ConfigFile config)
         {
+            EliteMaterial = Plugin.assetBundle.LoadAsset<Material>("AffixPureOverlay.mat");
+
+            purifiedEffect = Plugin.assetBundle.LoadAsset<GameObject>("PureEffect.prefab");
+            ContentAddition.AddEffect(purifiedEffect);
+
+            nullifiedEffect = Plugin.assetBundle.LoadAsset<GameObject>("NullEffect.prefab");
+            ContentAddition.AddEffect(nullifiedEffect);
         }
 
         private void CreateEliteTiers()
         {
             CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
             {
-                R2API.EliteAPI.VanillaFirstTierDef,
-                R2API.EliteAPI.VanillaEliteOnlyFirstTierDef
+                new CombatDirector.EliteTierDef()
+                {
+                    costMultiplier = CombatDirector.baseEliteCostMultiplier * CostMultiplierOfElite,
+                    eliteTypes = Array.Empty<EliteDef>(),
+                    isAvailable = SetAvailability
+                }
             };
         }
 
@@ -72,6 +88,27 @@ namespace Thalassophobia.EliteEquipments
             {
                 if (self.HasBuff(EliteBuffDef))
                 {
+                    /*
+                    bool check = false;
+                    foreach (BuffIndex i in self.activeBuffsList)
+                    {
+                        if (BuffCatalog.GetBuffDef(i).isDebuff && !BuffCatalog.GetBuffDef(i).isHidden)
+                        {
+                            if (Plugin.DEBUG) {
+                                Log.LogInfo(BuffCatalog.GetBuffDef(i).name);
+                            }
+                            check = true;
+                        }
+                    }
+                    if (check)
+                    {
+                        EffectData effectData = new EffectData
+                        {
+                            origin = self.transform.position
+                        };
+                        EffectManager.SpawnEffect(purifiedEffect, effectData, true);
+                    }
+                    */
                     Util.CleanseBody(self, true, false, false, true, true, false);
                 }
                 orig(self, deltaTime);
@@ -84,7 +121,25 @@ namespace Thalassophobia.EliteEquipments
                 {
                     if (DamageInfo.attacker.GetComponent<CharacterBody>().HasBuff(EliteBuffDef))
                     {
-                        Util.CleanseBody(hitObject.GetComponent<CharacterBody>(), false, true, false, false, false, false);
+                        CharacterBody body = hitObject.GetComponent<CharacterBody>();
+                        bool check = false;
+                        foreach (BuffIndex i in body.activeBuffsList)
+                        {
+                            if (!BuffCatalog.GetBuffDef(i).isDebuff && !BuffCatalog.GetBuffDef(i).isCooldown)
+                            {
+                                check = true;
+                            }
+                        }
+                        if (check)
+                        {
+                            EffectData effectData = new EffectData
+                            {
+                                origin = body.transform.position
+                            };
+                            EffectManager.SpawnEffect(nullifiedEffect, effectData, true);
+                        }
+
+                        Util.CleanseBody(body, false, true, false, false, false, false);
                     }
                 }
             };

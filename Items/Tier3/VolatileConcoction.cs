@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Thalassophobia.Items.Tier3
 {
-    public class ProcOnKills : ItemBase<ProcOnKills>
+    public class VolatileConcoction : ItemBase<VolatileConcoction>
     {
         public override string ItemName => "Volatile Concoction";
 
-        public override string ItemLangTokenName => "PROC_ON_KILLS";
+        public override string ItemLangTokenName => "VOLATILE_CONCOCTION";
 
         public override string ItemPickupDesc => "High damage hits trigger on kill effects.";
 
@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier3
 
         public override ItemTier Tier => ItemTier.Tier3;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/PotionModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/PotionIcon.png");
 
         // Item stats
         private float damageThreshold;

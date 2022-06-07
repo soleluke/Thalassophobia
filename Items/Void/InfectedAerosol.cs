@@ -13,15 +13,15 @@ using static RoR2.DotController;
 
 namespace Thalassophobia.Items.Void
 {
-    class VoidIgnitionTank : ItemBase<VoidIgnitionTank>
+    class InfectedAerosol : ItemBase<InfectedAerosol>
     {
         public override string ItemName => "Infected Aerosol";
 
         public override string ItemLangTokenName => "VOID_IGNITION_TANK";
 
-        public override string ItemPickupDesc => "Corrupts all Ignition Tanks. Your fire becomes void fog.";
+        public override string ItemPickupDesc => "<style=cIsVoid>Corrupts all Ignition Tanks.</style> Your fire effects becomes void fog.";
 
-        public override string ItemFullDescription => "Corrupts all Ignition Tanks. Fire effects cause enemies to suffocate instead. This debuff does more damage the longer enemies have it.";
+        public override string ItemFullDescription => "Fire effects cause enemies to suffocate instead for <style=cIsDamage>1 second</style> <style=cStack>(+1 second per stack)</style>. This debuff does more damage the longer enemies have it. <style=cIsVoid>Corrupts all Ignition Tanks.</style>";
 
         public override string ItemLore => "";
 
@@ -29,9 +29,9 @@ namespace Thalassophobia.Items.Void
 
         public override String CorruptsItem => DLC1Content.Items.StrengthenBurn.nameToken;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/CanModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/VoidCanIcon.png");
 
         // Buff
         public BuffDef voidFog;
@@ -66,7 +66,7 @@ namespace Thalassophobia.Items.Void
 
             voidFog = ScriptableObject.CreateInstance<BuffDef>();
             voidFog.name = "Suffocating";
-            voidFog.iconSprite = Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+            voidFog.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("VoidFogIcon.png");
             voidFog.canStack = false;
             voidFog.isDebuff = true;
             ContentAddition.AddBuffDef(voidFog);

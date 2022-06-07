@@ -28,9 +28,11 @@ namespace Thalassophobia.EliteEquipments
 
         public override Sprite EliteBuffIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
-        public override Color32 EliteColor => new Color32(125, 75, 75, byte.MaxValue);
+        public override float HealthMultiplier => 18f;
 
-        public override int EliteRampIndex => 3;
+        public override float DamageMultiplier => 6f;
+
+        public override float CostMultiplierOfElite => 2f;
 
         public override void Init(ConfigFile config)
         {
@@ -50,7 +52,12 @@ namespace Thalassophobia.EliteEquipments
         {
             CanAppearInEliteTiers = new CombatDirector.EliteTierDef[]
             {
-               R2API.EliteAPI.VanillaEliteOnlyFirstTierDef
+                new CombatDirector.EliteTierDef()
+                {
+                    costMultiplier = CombatDirector.baseEliteCostMultiplier * CostMultiplierOfElite,
+                    eliteTypes = Array.Empty<EliteDef>(),
+                    isAvailable = SetAvailability
+                }
             };
         }
 

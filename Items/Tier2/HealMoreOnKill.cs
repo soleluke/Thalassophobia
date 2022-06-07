@@ -20,9 +20,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override ItemTier Tier => ItemTier.Tier2;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/StoneModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/RedStoneIcon.png");
 
         // Custom buff for healing
         private BuffDef redStoneBoost;
@@ -52,7 +52,7 @@ namespace Thalassophobia.Items.Tier2
 
             redStoneBoost = ScriptableObject.CreateInstance<BuffDef>();
             redStoneBoost.name = "Red Stone Boost";
-            redStoneBoost.iconSprite = Resources.Load<Sprite>("textures/bufficons/texbuffregenboosticon");
+            redStoneBoost.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("RedStoneBuffIcon.png");
             redStoneBoost.isDebuff = false;
             redStoneBoost.canStack = true;
             ContentAddition.AddBuffDef(redStoneBoost);

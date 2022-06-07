@@ -25,9 +25,9 @@ namespace Thalassophobia.Items.Tier1
 
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("FMaskModel.prefab");
 
-        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/FragileMaskIcon.png");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("FragileMaskIcon.png");
 
         public override void Init(ConfigFile config)
         {

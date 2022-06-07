@@ -21,9 +21,9 @@ namespace Thalassophobia.Items.Tier3
 
         public override ItemTier Tier => ItemTier.Tier3;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/ControlUnitModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/ControlUnitIcon.png");
 
         // Item stats
         private float cooldown;

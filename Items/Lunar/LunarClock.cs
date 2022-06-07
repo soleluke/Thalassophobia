@@ -22,9 +22,9 @@ namespace Thalassophobia.Items.Lunar
 
         public override ItemTier Tier => ItemTier.Lunar;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("ClockModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("ClockIcon.png");
 
         // Item Stats
         private float damageMultiplier;

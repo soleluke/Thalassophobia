@@ -25,9 +25,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override ItemTier Tier => ItemTier.Tier2;
 
-        public override GameObject ItemModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
+        public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("Assets/Assembly/MyAssets/Models/CandleModel.prefab");
 
-        public override Sprite ItemIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
+        public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/BrokenCandleIcon.png");
 
         // Item stats
         private float chance;
@@ -66,7 +66,7 @@ namespace Thalassophobia.Items.Tier2
 
             scorched = ScriptableObject.CreateInstance<BuffDef>();
             scorched.name = "Scorched";
-            scorched.iconSprite = Resources.Load<Sprite>("textures/bufficons/texBuffDeathMarkIcon");
+            scorched.iconSprite = Plugin.assetBundle.LoadAsset<Sprite>("ScorchedIcon.png");
             scorched.buffColor = Color.black;
             scorched.isDebuff = true;
             scorched.canStack = false;
