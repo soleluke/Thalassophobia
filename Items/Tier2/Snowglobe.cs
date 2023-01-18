@@ -99,7 +99,8 @@ namespace Thalassophobia.Items.Tier2
 
         private void OverlayManager(On.RoR2.CharacterBody.orig_FixedUpdate orig, CharacterBody self)
         {
-            if (self.modelLocator && self.modelLocator.modelTransform)
+            /*
+            if (self && self.modelLocator && self.modelLocator.modelTransform)
             {
                 bool add = true;
                 foreach (Material mat in self.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().currentOverlays) 
@@ -121,6 +122,7 @@ namespace Thalassophobia.Items.Tier2
                     overlay.AddToCharacerModel(self.modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>());
                 }
             }
+            */
             orig(self);
         }
 
