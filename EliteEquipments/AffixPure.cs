@@ -24,15 +24,17 @@ namespace Thalassophobia.EliteEquipments
 
         public override GameObject EliteEquipmentModel => Resources.Load<GameObject>("Prefabs/PickupModels/PickupMystery");
 
+        public override Material EliteMaterial { get; set; } = Plugin.assetBundle.LoadAsset<Material>("AffixPureOverlay.mat");
+
         public override Sprite EliteEquipmentIcon => Resources.Load<Sprite>("Textures/MiscIcons/texMysteryIcon");
 
         public override Sprite EliteBuffIcon => Plugin.assetBundle.LoadAsset<Sprite>("NullifyingBuffIcon.png");
 
-        public override float HealthMultiplier => 4f;
+        public override float HealthMultiplier => 3f;
 
         public override float DamageMultiplier => 2f;
 
-        public override float CostMultiplierOfElite => 1f;
+        public override float CostMultiplierOfElite => 0.7f;
 
         private GameObject purifiedEffect;
         private GameObject nullifiedEffect;
@@ -49,7 +51,6 @@ namespace Thalassophobia.EliteEquipments
 
         private void CreateConfig(ConfigFile config)
         {
-            EliteMaterial = Plugin.assetBundle.LoadAsset<Material>("AffixPureOverlay.mat");
 
             purifiedEffect = Plugin.assetBundle.LoadAsset<GameObject>("PureEffect.prefab");
             ContentAddition.AddEffect(purifiedEffect);

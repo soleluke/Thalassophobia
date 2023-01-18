@@ -19,22 +19,19 @@ using static Thalassophobia.Utils.WispSummonController;
 
 namespace Thalassophobia
 {
-    // Meta data and dependencies
     [BepInDependency("com.bepis.r2api")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
-    [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(DotAPI), nameof(EliteAPI), nameof(ContentAddition), nameof(DamageAPI), nameof(OrbAPI), nameof(RecalculateStatsAPI), nameof(LegacyResourcesAPI), nameof(NetworkingAPI), nameof(TempVisualEffectAPI))]
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class Plugin : BaseUnityPlugin
     {
         // Mod info
         public const string MODNAME = "Thalassophobia";
-        public const string AUTHOR = "JTPuff";
+        public const string AUTHOR = "jt_hehe";
         public const string GUID = "com." + AUTHOR + "." + MODNAME;
         public const string VERSION = "0.1.0";
 
         // Asset bundle
         public static AssetBundle assetBundle;
-        public static string[] allAssets;
 
         // String builder
         public static StringBuilder BUILDER = new StringBuilder();
@@ -60,19 +57,16 @@ namespace Thalassophobia
             // Logger
             Log.Init(Logger);
 
-            // Bundle
+            // Assets
             using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Thalassophobia.myassets"))
             {
                 assetBundle = AssetBundle.LoadFromStream(stream);
             }
-            allAssets = assetBundle.GetAllAssetNames();
 
             // Shader Conversion
             ShaderConversion(assetBundle);
-            if (DEBUG)
-            {
-                Log.LogInfo(SwappedMaterials.Count);
-            }
+
+            AttachControllerFinderToObjects(assetBundle);
 
             // Load items
             itemHelper = new ItemHelper(Config);
@@ -82,24 +76,12 @@ namespace Thalassophobia
             eliteHelper = new EliteHelper(Config);
             eliteHelper.LoadAll();
 
-            // Register network thing
-            NetworkingAPI.RegisterMessageType<SyncCheckAlive>();
-
             CustomDamageColor.Init();
 
             // Hooks
             Hooks();
 
-            // Log that everything finished loading
-            Log.LogInfo(nameof(Awake) + " Penis");
-            Log.LogInfo(allAssets.Length);
-            if (DEBUG)
-            {
-                foreach (string s in allAssets)
-                {
-                    Log.LogInfo(s);
-                }
-            }
+            Log.LogInfo(nameof(Awake) + " Finished");
         }
 
         void Hooks()
@@ -128,7 +110,51 @@ namespace Thalassophobia
                     {
                         Log.LogInfo("Swapped Shader");
                         Log.LogInfo(material.name);
+                        Log.LogInfo(material.shader.name);
                     }
+                }
+            }
+        }
+
+        // Aetherium my beloved
+        public static void AttachControllerFinderToObjects(AssetBundle assetbundle)
+        {
+            if (!assetbundle) { return; }
+
+            var gameObjects = assetbundle.LoadAllAssets<GameObject>();
+
+            foreach (GameObject gameObject in gameObjects)
+            {
+                var foundRenderers = gameObject.GetComponentsInChildren<Renderer>().Where(x => x.sharedMaterial && x.sharedMaterial.shader.name.StartsWith("Hopoo Games"));
+                foreach (Renderer renderer in foundRenderers)
+                {
+                    var controller = renderer.gameObject.AddComponent<MaterialControllerComponents.HGControllerFinder>();
+                    Log.LogError(renderer.gameObject.name);
+                }
+            }
+
+            gameObjects = null;
+        }
+
+        public static void AttachControllerFinderToObject(GameObject gameObject)
+        {
+            var foundRenderers = gameObject.GetComponentsInChildren<Renderer>().Where(x => x.sharedMaterial && x.sharedMaterial.shader.name.StartsWith("Hopoo Games"));
+            Log.LogInfo(foundRenderers.ToList().Count + " in " + gameObject.name);
+            foreach (Renderer renderer in foundRenderers)
+            {
+                var controller = renderer.gameObject.AddComponent<MaterialControllerComponents.HGControllerFinder>();
+                Log.LogInfo(renderer.gameObject.name);
+            }
+        }
+
+        // Update mostly for testing
+        private void Update()
+        {
+            if (DEBUG)
+            {
+                if (Input.GetKeyDown(KeyCode.F2))
+                {
+                   // AttachControllerFinderToObject(PlayerCharacterMasterController.instances[0].master.GetBody().modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().gameObject);
                 }
             }
         }

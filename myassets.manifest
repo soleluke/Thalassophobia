@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2856957862
+CRC: 2038820363
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: fd41096785fa851e79544260dbc31ba3
+    Hash: d4d5d1c21cd92ebcbe7be737400f0e4f
   TypeTreeHash:
     serializedVersion: 2
     Hash: ba5a9b24d2339c33498884b5bb559ea4
@@ -69,6 +69,7 @@ Assets:
 - Assets/Assembly/MyAssets/Models/CompoundModel.prefab
 - Assets/Assembly/MyAssets/Models/HuntersMarkModel.prefab
 - Assets/Assembly/MyAssets/Models/BotModel.prefab
+- Assets/Assembly/MyAssets/Effects/Overlays/BetterSlowOverlay.mat
 - Assets/Assembly/MyAssets/Icons/ImplantIcon.png
 - Assets/Assembly/MyAssets/Icons/NullifyingBuffIcon.png
 - Assets/Assembly/MyAssets/Models/VisorModel.prefab

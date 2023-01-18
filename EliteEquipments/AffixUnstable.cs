@@ -63,7 +63,8 @@ namespace Thalassophobia.EliteEquipments
 
         private bool SetAvailability(SpawnCard.EliteRules arg)
         {
-            return Run.instance.loopClearCount > 0 && arg == SpawnCard.EliteRules.Default;
+            return false;
+            //return Run.instance.loopClearCount > 0 && arg == SpawnCard.EliteRules.Default;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

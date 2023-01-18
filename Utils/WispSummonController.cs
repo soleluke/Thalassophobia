@@ -244,43 +244,5 @@ namespace Thalassophobia.Utils
                     break;
             }
         }
-
-        public class SyncCheckAlive : INetMessage
-        {
-            NetworkInstanceId netId;
-            public SyncCheckAlive()
-            {
-            }
-
-            public SyncCheckAlive(NetworkInstanceId netId)
-            {
-                this.netId = netId;
-            }
-
-            public void Deserialize(NetworkReader reader)
-            {
-                netId = reader.ReadNetworkId();
-            }
-
-            public void OnReceived()
-            {
-                if (NetworkServer.active)
-                {
-                    //Log.LogInfo("Sync: Host ran this. Skip.");
-                    return;
-                }
-                GameObject master = Util.FindNetworkObject(netId);
-                if (!master)
-                {
-                    //Log.LogInfo("Sync: master is null.");
-                    return;
-                }
-            }
-
-            public void Serialize(NetworkWriter writer)
-            {
-                writer.Write(netId);
-            }
-        }
     }
 }

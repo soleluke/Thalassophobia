@@ -81,11 +81,11 @@ namespace Thalassophobia.EliteEquipments
 
         protected void CreateLang()
         {
-            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME", EliteEquipmentName);
-            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP", EliteEquipmentPickupDesc);
-            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION", EliteEquipmentFullDescription);
-            LanguageAPI.Add("AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_LORE", EliteEquipmentLore);
-            LanguageAPI.Add("AETHERIUM_ELITE_" + EliteAffixToken + "_MODIFIER", EliteModifier + " {0}");
+            LanguageAPI.Add("THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME", EliteEquipmentName);
+            LanguageAPI.Add("THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP", EliteEquipmentPickupDesc);
+            LanguageAPI.Add("THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION", EliteEquipmentFullDescription);
+            LanguageAPI.Add("THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_LORE", EliteEquipmentLore);
+            LanguageAPI.Add("THALASSOPHOBIA_ELITE_" + EliteAffixToken + "_MODIFIER", EliteModifier + " {0}");
 
         }
 
@@ -99,11 +99,11 @@ namespace Thalassophobia.EliteEquipments
             EliteBuffDef.iconSprite = EliteBuffIcon;
 
             EliteEquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
-            EliteEquipmentDef.name = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken;
-            EliteEquipmentDef.nameToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME";
-            EliteEquipmentDef.pickupToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP";
-            EliteEquipmentDef.descriptionToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION";
-            EliteEquipmentDef.loreToken = "AETHERIUM_ELITE_EQUIPMENT_" + EliteAffixToken + "_LORE";
+            EliteEquipmentDef.name = "THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken;
+            EliteEquipmentDef.nameToken = "THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME";
+            EliteEquipmentDef.pickupToken = "THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP";
+            EliteEquipmentDef.descriptionToken = "THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION";
+            EliteEquipmentDef.loreToken = "THALASSOPHOBIA_ELITE_EQUIPMENT_" + EliteAffixToken + "_LORE";
             EliteEquipmentDef.pickupModelPrefab = EliteEquipmentModel;
             EliteEquipmentDef.pickupIconSprite = EliteEquipmentIcon;
             EliteEquipmentDef.appearsInSinglePlayer = AppearsInSinglePlayer;
@@ -168,8 +168,8 @@ namespace Thalassophobia.EliteEquipments
         protected void CreateElite()
         {
             EliteDef = ScriptableObject.CreateInstance<EliteDef>();
-            EliteDef.name = "AETHERIUM_ELITE_" + EliteAffixToken;
-            EliteDef.modifierToken = "AETHERIUM_ELITE_" + EliteAffixToken + "_MODIFIER";
+            EliteDef.name = "THALASSOPHOBIA_ELITE_" + EliteAffixToken;
+            EliteDef.modifierToken = "THALASSOPHOBIA_ELITE_" + EliteAffixToken + "_MODIFIER";
             EliteDef.eliteEquipmentDef = EliteEquipmentDef;
             EliteDef.healthBoostCoefficient = HealthMultiplier;
             EliteDef.damageBoostCoefficient = DamageMultiplier;

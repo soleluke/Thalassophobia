@@ -10,7 +10,7 @@ namespace Thalassophobia.Items.Lunar
 {
     public class LunarClock : ItemBase<LunarClock>
     {
-        public override string ItemName => "Borrwed Time";
+        public override string ItemName => "Borrowed Time";
 
         public override string ItemLangTokenName => "LUNAR_CLOCK";
 
