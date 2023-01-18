@@ -39,7 +39,7 @@ namespace Thalassophobia.Items.Tier3
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Damage };
+            ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.CannotCopy };
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -74,6 +74,7 @@ namespace Thalassophobia.Items.Tier3
                 if (self.GetBodyObject().GetComponent<WispSummonController>())
                 {
                     WispSummonController wispController = self.GetBodyObject().GetComponent<WispSummonController>();
+                    wispController.owner = self;
                 }
                 else
                 {

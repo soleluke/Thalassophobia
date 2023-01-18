@@ -41,7 +41,7 @@ namespace Thalassophobia.Items.Tier1
 
         public override void CreateConfig(ConfigFile config)
         {
-            ItemTags = new ItemTag[] { ItemTag.Damage };
+            ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.CannotCopy };
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

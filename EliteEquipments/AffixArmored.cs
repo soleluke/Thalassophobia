@@ -35,12 +35,14 @@ namespace Thalassophobia.EliteEquipments
 
         public override void Init(ConfigFile config)
         {
+            /*
             CreateConfig(config);
             CreateLang();
             CreateEquipment();
             CreateEliteTiers();
             CreateElite();
             Hooks();
+            */
         }
 
         private void CreateConfig(ConfigFile config)
@@ -62,8 +64,7 @@ namespace Thalassophobia.EliteEquipments
 
         private bool SetAvailability(SpawnCard.EliteRules arg)
         {
-            return false;
-            //return Run.instance.loopClearCount > 0 && arg == SpawnCard.EliteRules.Default;
+            return Run.instance.loopClearCount > 0 && arg == SpawnCard.EliteRules.Default;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()

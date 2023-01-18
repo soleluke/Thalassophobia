@@ -28,7 +28,7 @@ namespace Thalassophobia
         public const string MODNAME = "Thalassophobia";
         public const string AUTHOR = "jt_hehe";
         public const string GUID = "com." + AUTHOR + "." + MODNAME;
-        public const string VERSION = "0.1.0";
+        public const string VERSION = "0.1.3";
 
         // Asset bundle
         public static AssetBundle assetBundle;
