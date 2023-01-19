@@ -81,7 +81,7 @@ namespace Thalassophobia.Items.Tier2
         private void GlobalEventManager_OnCharacterDeath(On.RoR2.GlobalEventManager.orig_OnCharacterDeath orig, GlobalEventManager self, DamageReport damageReport)
         {
             orig(self, damageReport);
-            if (damageReport.victimIsElite)
+            if (damageReport.victimIsElite && damageReport.attackerBody)
             {
                 CharacterBody body = damageReport.attackerBody;
 

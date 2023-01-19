@@ -177,8 +177,15 @@ namespace Thalassophobia.EliteEquipments
             var baseEliteTierDefs = EliteAPI.GetCombatDirectorEliteTiers();
             if (!CanAppearInEliteTiers.All(x => baseEliteTierDefs.Contains(x)))
             {
+                if (Plugin.DEBUG)
+                {
+                    Log.LogInfo("Creating custom elite tier");
+                }
                 var distinctEliteTierDefs = CanAppearInEliteTiers.Except(baseEliteTierDefs);
-
+                if (Plugin.DEBUG)
+                {
+                    Log.LogInfo("distinct tiers = " + distinctEliteTierDefs.Count());
+                }
                 foreach (EliteTierDef eliteTierDef in distinctEliteTierDefs)
                 {
                     var indexToInsertAt = Array.FindIndex(baseEliteTierDefs, x => x.costMultiplier >= eliteTierDef.costMultiplier);

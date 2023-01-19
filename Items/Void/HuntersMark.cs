@@ -83,7 +83,7 @@ namespace Thalassophobia.Items.Void
         {
             orig(self, damageInfo, victim);
 
-            if (damageInfo.attacker.GetComponent<CharacterBody>()) 
+            if (damageInfo.attacker && damageInfo.attacker.GetComponent<CharacterBody>()) 
             {
                 CharacterBody body = damageInfo.attacker.GetComponent<CharacterBody>();
                 if (damageInfo.crit && GetCount(body) > 0)

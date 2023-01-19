@@ -28,7 +28,7 @@ namespace Thalassophobia
         public const string MODNAME = "Thalassophobia";
         public const string AUTHOR = "jt_hehe";
         public const string GUID = "com." + AUTHOR + "." + MODNAME;
-        public const string VERSION = "0.1.3";
+        public const string VERSION = "0.1.4";
 
         // Asset bundle
         public static AssetBundle assetBundle;
@@ -42,13 +42,12 @@ namespace Thalassophobia
 
         public static Dictionary<string, string> ShaderLookup = new Dictionary<string, string>()
         {
-            {"stubbed hopoo games/deferred/standard", "shaders/deferred/hgstandard"},
-            {"stubbed hopoo games/fx/cloud remap", "shaders/fx/hgcloudremap" },
-            {"stubbed hopoo games/fx/cloud intersection remap", "shaders/fx/hgintersectioncloudremap" },
+            {"stubbedshader/fx/hgcloudremap", "shaders/fx/hgcloudremap" },
+            {"stubbedshader/fx/hgintersectioncloudremap", "shaders/fx/hgintersectioncloudremap" },
         };
 
         // DEBUG
-        public static bool DEBUG = true;
+        public static bool DEBUG = false;
         private static List<Material> SwappedMaterials = new List<Material>();
 
         private void Awake()
@@ -101,6 +100,10 @@ namespace Thalassophobia
             }
             foreach (Material material in materialAssets)
             {
+                if (DEBUG)
+                {
+                    Log.LogInfo(material.shader.name.ToLowerInvariant());
+                }
                 var replacementShader = LegacyResourcesAPI.Load<Shader>(ShaderLookup[material.shader.name.ToLowerInvariant()]);
                 if (replacementShader)
                 {
@@ -154,7 +157,7 @@ namespace Thalassophobia
             {
                 if (Input.GetKeyDown(KeyCode.F2))
                 {
-                   // AttachControllerFinderToObject(PlayerCharacterMasterController.instances[0].master.GetBody().modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().gameObject);
+                    // AttachControllerFinderToObject(PlayerCharacterMasterController.instances[0].master.GetBody().modelLocator.modelTransform.GetComponent<RoR2.CharacterModel>().gameObject);
                 }
             }
         }

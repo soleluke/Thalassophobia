@@ -30,11 +30,11 @@ namespace Thalassophobia.EliteEquipments
 
         public override Sprite EliteBuffIcon => Plugin.assetBundle.LoadAsset<Sprite>("NullifyingBuffIcon.png");
 
-        public override float HealthMultiplier => 3f;
+        public override float HealthMultiplier => 4f;
 
         public override float DamageMultiplier => 2f;
 
-        public override float CostMultiplierOfElite => 0.7f;
+        public override float CostMultiplierOfElite => 5f;
 
         private GameObject purifiedEffect;
         private GameObject nullifiedEffect;
@@ -51,6 +51,7 @@ namespace Thalassophobia.EliteEquipments
 
         private void CreateConfig(ConfigFile config)
         {
+            CostMultiplierOfElite = config.Bind<float>("Elite: " + EliteModifier, "Cost Multiplier", 5.2f, "Cost to spawn the elite is multiplied by this. Decrease to make the elite spawn more.").Value;
 
             purifiedEffect = Plugin.assetBundle.LoadAsset<GameObject>("PureEffect.prefab");
             ContentAddition.AddEffect(purifiedEffect);
@@ -65,7 +66,7 @@ namespace Thalassophobia.EliteEquipments
             {
                 new CombatDirector.EliteTierDef()
                 {
-                    costMultiplier = CombatDirector.baseEliteCostMultiplier * CostMultiplierOfElite,
+                    costMultiplier = CostMultiplierOfElite,
                     eliteTypes = Array.Empty<EliteDef>(),
                     isAvailable = SetAvailability
                 }
