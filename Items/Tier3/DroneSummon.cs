@@ -1,9 +1,12 @@
 ﻿using BepInEx.Configuration;
 using R2API;
 using RoR2;
+using RoR2.Navigation;
 using System.Collections.Generic;
 using Thalassophobia.Utils;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.Events;
 
 namespace Thalassophobia.Items.Tier3
 {
@@ -30,8 +33,8 @@ namespace Thalassophobia.Items.Tier3
         private int numItems;
         private float damage;
 
-        private static List<DroneSummonController> controllers = new List<DroneSummonController>();
-
+        private DeployableSlot slot;
+        private CharacterSpawnCard spawnCard;
 
         public override void Init(ConfigFile config)
         {
@@ -45,9 +48,12 @@ namespace Thalassophobia.Items.Tier3
         {
             ItemTags = new ItemTag[] { ItemTag.Damage, ItemTag.CannotCopy, ItemTag.Utility };
 
-            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 5f, "Time between spawning drones.").Value;
+            cooldown = config.Bind<float>("Item: " + ItemName, "Cooldown", 60f, "Time between spawning drones.").Value;
             numItems = config.Bind<int>("Item: " + ItemName, "NumberOfItems", 10, "Number of items the drones copy.").Value;
             damage = config.Bind<float>("Item: " + ItemName, "Damage", 100f, "Percent damage the drones deal.").Value;
+
+            slot = R2API.DeployableAPI.RegisterDeployableSlot(delegate (CharacterMaster self, int mult) { return 1; });
+            spawnCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/Base/Drones/cscMegaDrone.asset").WaitForCompletion();
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -63,24 +69,65 @@ namespace Thalassophobia.Items.Tier3
         private void CharacterBody_Update(On.RoR2.CharacterBody.orig_Update orig, CharacterBody self)
         {
             orig(self);
-            if (GetCount(self) > 0)
+            if (self && self.inventory && self.master)
             {
-                if (self.GetComponent<DroneSummonController>())
+                if (self.inventory.GetItemCount(this.ItemDef.itemIndex) > 0 && self.master.GetDeployableCount(slot) < 1)
                 {
-                    self.GetComponent<DroneSummonController>().summonItemCount = GetCount(self);
+                    SummonDrone(self.master);
+                }
+            }
+        }
+
+        private void SummonDrone(CharacterMaster owner)
+        {
+            if (Plugin.DEBUG)
+            {
+                if (!owner)
+                {
+                    Log.LogInfo("Owner is null");
                 }
                 else
                 {
-                    Log.LogInfo("test");
-                    DroneSummonController controller = self.gameObject.AddComponent<DroneSummonController>();
-                    controller.owner = self.master;
-                    controller.cooldown = cooldown;
-                    controller.damage = (int)damage;
-                    controller.items = numItems;
-                    controller.summonItemCount = GetCount(self);
-                    controllers.Add(controller);
+                    Log.LogInfo($"Attempting spawn drone at {owner.GetBody().transform.position.x}, {owner.GetBody().transform.position.y}, {owner.GetBody().transform.position.z}");
                 }
             }
+            DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, new DirectorPlacementRule
+            {
+                placementMode = DirectorPlacementRule.PlacementMode.Approximate,
+                minDistance = 3f,
+                maxDistance = 40f,
+                spawnOnTarget = owner.GetBody().transform
+            }, RoR2Application.rng);
+            directorSpawnRequest.summonerBodyObject = owner.GetBodyObject();
+            directorSpawnRequest.onSpawnedServer = new System.Action<SpawnCard.SpawnResult>(delegate (SpawnCard.SpawnResult spawnResult)
+            {
+                if (spawnResult.success && spawnResult.spawnedInstance)
+                {
+                    CharacterMaster drone = spawnResult.spawnedInstance.GetComponent<CharacterMaster>();
+                    Deployable deployable = spawnResult.spawnedInstance.AddComponent<Deployable>();
+                    owner.AddDeployable(deployable, slot);
+                    deployable.onUndeploy = (deployable.onUndeploy ?? new UnityEvent());
+                    deployable.onUndeploy.AddListener(new UnityAction(drone.TrueKill));
+
+                    Inventory inventoryFiltered = new Inventory();
+                    inventoryFiltered.CopyItemsFrom(owner.inventory, (ItemIndex index) =>
+                    {
+                        return !ItemCatalog.GetItemDef(index).ContainsTag(ItemTag.CannotCopy);
+                    });
+                    for (int num = 0; num < 10 * owner.inventory.GetItemCount(this.ItemDef.itemIndex); num++)
+                    {
+                        if (inventoryFiltered.itemAcquisitionOrder.Count <= 0)
+                        {
+                            break;
+                        }
+                        int itemIndexToGive = UnityEngine.Random.Range(0, inventoryFiltered.itemAcquisitionOrder.Count);
+                        drone.inventory.GiveItem(inventoryFiltered.itemAcquisitionOrder[itemIndexToGive]);
+                        inventoryFiltered.RemoveItem(inventoryFiltered.itemAcquisitionOrder[itemIndexToGive], 1);
+                    }
+                    drone.inventory.GiveItem(RoR2Content.Items.BoostHp, 10);
+                }
+            });
+            DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
         }
     }
 }

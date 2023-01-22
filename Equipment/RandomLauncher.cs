@@ -29,10 +29,12 @@ namespace Thalassophobia.Equipment
 
         public override void Init(ConfigFile config)
         {
+            /*
             CreateConfig(config);
             CreateLang();
             CreateEquipment();
             Hooks();
+            */
         }
 
         protected override void CreateConfig(ConfigFile config)

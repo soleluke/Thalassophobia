@@ -73,7 +73,7 @@ namespace Thalassophobia.Items.Tier2
             }
             if (self.HasBuff(regen))
             {
-                self.healthComponent.shield -= 1;
+                self.healthComponent.shield -= 2.5f;
                 if ((self.healthComponent.health == self.healthComponent.fullHealth)
                     || self.healthComponent.shield <= 0)
                 {
@@ -87,7 +87,7 @@ namespace Thalassophobia.Items.Tier2
             var count = GetCount(sender);
             if (sender.GetBuffCount(regen) > 0)
             {
-                args.regenMultAdd += 10f * count;
+                args.baseRegenAdd += 5f * count;
             }
             if (count > 0)
             {

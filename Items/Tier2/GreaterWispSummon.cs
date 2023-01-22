@@ -4,6 +4,8 @@ using RoR2;
 using Thalassophobia.Items.Lunar;
 using Thalassophobia.Utils;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.Events;
 using static On.RoR2.GlobalEventManager;
 using static RoR2.DotController;
 
@@ -27,6 +29,9 @@ namespace Thalassophobia.Items.Tier2
 
         public override Sprite ItemIcon => Plugin.assetBundle.LoadAsset<Sprite>("Assets/Assembly/MyAssets/Icons/GMaskIcon.png");
 
+        private DeployableSlot slot;
+        private CharacterSpawnCard spawnCard;
+
         public override void Init(ConfigFile config)
         {
             CreateConfig(config);
@@ -34,7 +39,8 @@ namespace Thalassophobia.Items.Tier2
             CreateItem();
             Hooks();
 
-            WispSummonController.tier2Def = this.ItemDef;
+            slot = R2API.DeployableAPI.RegisterDeployableSlot(delegate (CharacterMaster self, int mult) { return self.inventory.GetItemCount(this.ItemDef.itemIndex); });
+            spawnCard = Addressables.LoadAssetAsync<CharacterSpawnCard>("RoR2/Base/LunarWisp/cscGreaterWisp.asset").WaitForCompletion();
         }
 
         public override void CreateConfig(ConfigFile config)
@@ -50,38 +56,82 @@ namespace Thalassophobia.Items.Tier2
         public override void Hooks()
         {
             On.RoR2.CharacterBody.Update += CharacterBody_Update;
-            On.RoR2.CharacterMaster.OnItemAddedClient += CharacterMaster_OnItemAddedClient;
         }
 
         private void CharacterBody_Update(On.RoR2.CharacterBody.orig_Update orig, CharacterBody self)
         {
             orig(self);
-            if (GetCount(self) > 0)
+            if (self && self.inventory && self.master)
             {
-                if (!self.GetComponent<WispSummonController>())
+                if (self.inventory.GetItemCount(this.ItemDef.itemIndex) > 0)
                 {
-                    WispSummonController wispController = self.gameObject.AddComponent<WispSummonController>();
-                    wispController.owner = self.master;
+                    int itemCount = self.inventory.GetItemCount(this.ItemDef.itemIndex);
+                    int numSummoned = self.master.GetDeployableCount(slot);
+                    if (itemCount > numSummoned)
+                    {
+                        SummonWisp(self.master);
+                    }
                 }
             }
         }
 
-        private void CharacterMaster_OnItemAddedClient(On.RoR2.CharacterMaster.orig_OnItemAddedClient orig, CharacterMaster self, ItemIndex itemIndex)
+        private void SummonWisp(CharacterMaster owner)
         {
-            orig(self, itemIndex);
-            if (itemIndex == ItemDef.itemIndex)
+            int tier1Broken = owner.GetBody().inventory.GetItemCount(Tier1.WispSummonBroken.instance.ItemDef);
+            int tier2Broken = owner.GetBody().inventory.GetItemCount(Tier2.GreaterWispSummonBroken.instance.ItemDef);
+            int tier3Broken = owner.GetBody().inventory.GetItemCount(Tier3.LunarWispSummonBroken.instance.ItemDef);
+            DirectorSpawnRequest directorSpawnRequest = new DirectorSpawnRequest(spawnCard, new DirectorPlacementRule
             {
-                if (self.GetBodyObject().GetComponent<WispSummonController>())
+                placementMode = DirectorPlacementRule.PlacementMode.Approximate,
+                minDistance = 3f,
+                maxDistance = 40f,
+                spawnOnTarget = owner.GetBody().transform
+            }, RoR2Application.rng);
+            directorSpawnRequest.summonerBodyObject = owner.GetBodyObject();
+            directorSpawnRequest.onSpawnedServer = new System.Action<SpawnCard.SpawnResult>(delegate (SpawnCard.SpawnResult spawnResult)
+            {
+                if (spawnResult.success && spawnResult.spawnedInstance)
                 {
-                    WispSummonController wispController = self.GetBodyObject().GetComponent<WispSummonController>();
-                    wispController.owner = self;
+                    CharacterMaster wisp = spawnResult.spawnedInstance.GetComponent<CharacterMaster>();
+                    wisp.inventory.GiveItem(RoR2Content.Items.BoostHp, 10 + (2 * tier1Broken));
+                    wisp.inventory.GiveItem(RoR2Content.Items.BoostDamage, 10 + (3 * tier2Broken));
+                    wisp.inventory.GiveItem(RoR2Content.Items.BoostAttackSpeed, 5 + (3 * tier2Broken));
+                    wisp.inventory.GiveItem(Tier1.FriendlyWispHelper.instance.ItemDef, 1 + tier1Broken + tier2Broken * 3 + tier3Broken * 10); ;
+                    wisp.inventory.GiveItem(RoR2Content.Items.TeamSizeDamageBonus, tier3Broken);
+                    wisp.inventory.GiveItem(RoR2Content.Items.ShinyPearl, tier3Broken * 5);
+                    wisp.inventory.GiveItem(RoR2Content.Items.MinionLeash);
+
+                    if (tier3Broken > 0)
+                    {
+                        int count = EliteCatalog.eliteDefs.Length;
+                        int eliteIndex = UnityEngine.Random.Range(0, count - 1);
+                        if (EliteCatalog.eliteDefs[eliteIndex].eliteEquipmentDef.nameToken == "EQUIPMENT_AFFIXGOLD_NAME")
+                        {
+                            eliteIndex -= 1;
+                        }
+                        Log.LogInfo(EliteCatalog.eliteDefs[eliteIndex].eliteEquipmentDef.nameToken);
+                        wisp.inventory.SetEquipmentIndex(EliteCatalog.eliteDefs[eliteIndex].eliteEquipmentDef.equipmentIndex);
+                    }
+                    wisp.onBodyDeath = (wisp.onBodyDeath ?? new UnityEvent());
+                    wisp.onBodyDeath.AddListener(() =>
+                    {
+                        EffectData effect = new EffectData
+                        {
+                            origin = owner.GetBody().transform.position
+                        };
+                        owner.inventory.RemoveItem(this.ItemDef);
+                        owner.inventory.GiveItem(Tier2.GreaterWispSummon.instance.ItemDef);
+                        CharacterMasterNotificationQueue.PushItemTransformNotification(owner,
+                           this.ItemDef.itemIndex, Tier2.GreaterWispSummonBroken.instance.ItemDef.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
+                        effect.SetNetworkedObjectReference(owner.gameObject);
+                        EffectManager.SpawnEffect(HealthComponent.AssetReferences.fragileDamageBonusBreakEffectPrefab, effect, true);
+                    });
+                    Deployable deployable = spawnResult.spawnedInstance.AddComponent<Deployable>();
+                    owner.AddDeployable(deployable, slot);
+                    deployable.onUndeploy = new UnityEvent();
                 }
-                else
-                {
-                    WispSummonController wispController = self.GetBodyObject().AddComponent<WispSummonController>();
-                    wispController.owner = self;
-                }
-            }
+            });
+            DirectorCore.instance.TrySpawnObject(directorSpawnRequest);
         }
     }
 }

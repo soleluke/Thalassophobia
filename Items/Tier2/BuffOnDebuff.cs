@@ -14,7 +14,7 @@ namespace Thalassophobia.Items.Tier2
 
         public override string ItemPickupDesc => "Gives a buff when you are debuffed.";
 
-        public override string ItemFullDescription => "Gives a random buff that lasts <style=cIsUtility>4</style> <style=cStack>(+2 per stack)</style> seconds when receiving a debuff. Can be <style=cIsDamage>+50%</style> damage, <style=cIsDamage>+50%</style> attack speed, <style=cIsDamage>+50%</style> crit chance and damage, <style=cIsUtility>+50%</style> movement speed, or <style=cIsHealing>+50%</style> regeneration. ";
+        public override string ItemFullDescription => "Gives a random buff that lasts <style=cIsUtility>4</style> <style=cStack>(+2 per stack)</style> seconds when receiving a debuff. Can be <style=cIsDamage>+50%</style> damage, <style=cIsDamage>+50%</style> attack speed, <style=cIsDamage>+50%</style> crit chance, <style=cIsUtility>+50%</style> movement speed, or <style=cIsHealing>+50%</style> regeneration. ";
 
         public override string ItemLore => "";
 

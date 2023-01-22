@@ -26,7 +26,7 @@ namespace Thalassophobia.Items.Void
 
         public override ItemTier Tier => ItemTier.VoidTier2;
 
-        public override String CorruptsItem => RoR2Content.Items.Seed.nameToken;
+        public override String CorruptsItem => RoR2Content.Items.AttackSpeedOnCrit.nameToken;
 
         public override GameObject ItemModel => Plugin.assetBundle.LoadAsset<GameObject>("HuntersMarkModel.prefab");
 
