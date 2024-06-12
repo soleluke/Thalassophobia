@@ -120,7 +120,7 @@ namespace Thalassophobia.Items.Tier2
                             origin = owner.GetBody().transform.position
                         };
                         owner.inventory.RemoveItem(this.ItemDef);
-                        owner.inventory.GiveItem(Tier2.GreaterWispSummon.instance.ItemDef);
+                        owner.inventory.GiveItem(Tier2.GreaterWispSummonBroken.instance.ItemDef);
                         CharacterMasterNotificationQueue.PushItemTransformNotification(owner,
                            this.ItemDef.itemIndex, Tier2.GreaterWispSummonBroken.instance.ItemDef.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
                         effect.SetNetworkedObjectReference(owner.gameObject);
